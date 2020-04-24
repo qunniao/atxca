@@ -1,0 +1,27 @@
+.myhead {
+    float: left;
+    height: 34px;
+    width: 80px;
+    line-height: 34px;
+}
+
+.headspan {
+    font-size: 19px;
+    width: 60px;
+    height: 34px;
+    line-height: 34px;
+    float: left;
+}
+/*.myhead {*/
+    /*float: left;*/
+    /*height: 34px;*/
+    /*width: 50px;*/
+    /*line-height: 34px;*/
+/*}*/
+
+/*.headspan {*/
+    /*width: 50px;*/
+    /*resize: none;*/
+    /*height: 34px;*/
+    /*float: left;*/
+/*}*/

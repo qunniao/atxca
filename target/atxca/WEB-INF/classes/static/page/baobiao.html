@@ -1,0 +1,313 @@
+<div id="app" xmlns:v-on="http://www.w3.org/1999/xhtml">
+    <div id="head"  >
+        <div  style="padding: 10px;">
+            <div>
+                <label class="cform-control ol-sm-3 control-label no-padding-right" for="start_date" style="margin-left: 20px;">开始日期</label>
+                <input type="text" class="input_style" value="" id="start_date" >
+
+                <label class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;" for="end_date" style="margin-left: 20px;">结束日期</label>
+                <input type="text" class="input_style" value="" id="end_date" >
+
+
+                <span class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;">场馆</span>
+                <select id="search_changdi" name="search_changdi" class="input_style">
+                    <option value="0">全部</option>
+                </select>
+
+                <span class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;">预约状态</span>
+                <select id="search_state" name="search_state" class="input_style">
+                    <option value="0">全部</option>
+                    <option value="7">现金到场</option>
+                    <option value="6">支付宝到场</option>
+                </select>
+
+                <button type="button" class="btn btn-primary" style="margin-left: 20px;" v-on:click="findList(1)">查询</button>
+
+                <button type="button" class="btn btn-success btn-small" style="margin-left: 40px;" v-on:click="showExportModal()">导出excel</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-12 maximum-margin">
+        <div class="card-body p-0">
+            <div class="table">
+                <div class="table-header-group" >
+                    <ul class="table-row">
+                        <li class="table-cell">编号</li>
+                        <li class="table-cell">场馆</li>
+                        <li class="table-cell" style="width:150px;">片场名称</li>
+                        <li class="table-cell" >联系人</li>
+                        <li class="table-cell">联系电话</li>
+                        <li class="table-cell" >预约日期</li>
+                        <li class="table-cell" >预约时间段</li>
+                        <li class="table-cell">价格</li>
+                        <li class="table-cell">订单状态</li>
+                    </ul>
+                </div>
+                <span class="table-row-group">
+                    <ul class="table-row" v-for="item in list">
+                        <li class="table-cell">{{item.oid}}</li>
+                        <li class="table-cell">{{item.changguan_name}}</li>
+                         <li class="table-cell">{{item.pianchang_name}}</li>
+                        <li class="table-cell">{{item.name}}</li>
+                        <li class="table-cell">{{item.phone}}</li>
+                        <li class="table-cell">
+
+                              {{ item.reserveTime }}
+
+
+                        </li>
+                        <li class="table-cell">{{item.betTime}}</li>
+                        <li class="table-cell">{{item.price}}</li>
+                         <li class="table-cell">
+
+                            <span v-if="item.type==2">
+                                <span class="label label-success radius">预约成功</span>
+                            </span>
+                            <span v-if="item.type==5">
+                                <span class="label label-info radius">预约未到</span>
+                            </span>
+                            <span v-if="item.type==7">
+                                <span class="label label-success radius">现金到场</span>
+                            </span>
+                             <span v-if="item.type==6">
+                                <span class="label label-success radius">支付宝到场</span>
+                            </span>
+                             <span v-if="item.type==4">
+                                <span class="label label-default radius">预约失败</span>
+                            </span>
+
+                         </li>
+
+
+                    </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ydc-pagination">
+        <ol>
+            <li class="ydc-previous-item">
+																		<span v-if="page>1">
+																			<button class="ydc-previous-item-btn-medium" v-on:click="findList(page-1)">
+																				<span>上一页</span>
+																			</button>
+																		</span>
+                <span v-else>
+																			<button class="ydc-previous-item-btn-medium ydc-disabled">
+																				<span>上一页</span>
+																			</button>
+																		</span>
+            </li>
+
+
+
+            <li class="ydc-previous-item">
+																		<span>
+																			<button class="ydc-previous-item-btn-medium" v-on:click="findList(page+1)">
+																				<span>下一页</span>
+																			</button>
+																		</span>
+
+            </li>
+
+
+        </ol>
+    </div>
+
+    <div id="reservationPage2"></div>
+</div>
+
+</div>
+
+
+<div id="viewPopUp" class="portlet box"></div>
+
+<!--添加模态窗口-->
+<div id="exportModal" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get" id="modaltestss">
+                <div class="modal-header">
+                    <strong>导出确认</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label no-padding-right">场馆</label>
+                        <div class="col-sm-9">
+                            <span id="modal_changguan">全部</span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label no-padding-right">开始日期</label>
+                        <div class="col-sm-9">
+                           <span id="modal_start_date">全部</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label no-padding-right">结束日期</label>
+                        <div class="col-sm-9">
+                            <span id="modal_end_date">全部</span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelModal()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="submitModal()">导出</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#search_date').fdatepicker({
+        format: 'yyyy-mm-dd'
+
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            list: [],
+            date:"",
+            page:1,
+            list3:[]
+        },
+        // 在 `methods` 对象中定义方法
+        methods: {
+            findList: function (p) {
+                app.page = p;
+                app.list = [];
+                var start_date = $('#start_date').val();
+                console.log("start_date:" + start_date);
+
+                var end_date = $('#end_date').val();
+                console.log("end_date:" + end_date);
+                if(start_date!=""){
+                    if(end_date==""){
+                        layer.msg("请选择结束日期");
+                        return;
+                    }
+                }
+                if(end_date!=""){
+                    if(start_date==""){
+                        layer.msg("请选择开始日期");
+                        return;
+                    }
+                }
+                var search_changdi = $('#search_changdi').val();
+                console.log("搜索场馆:" + search_changdi);
+                var search_state = $('#search_state').val();
+                console.log("搜索状态:" + search_state);
+                var opt = {
+                    "start_date": start_date,
+                    "end_date": end_date,
+                    "changdi": search_changdi,
+                    "state": search_state,
+                    "page":p
+                }
+                com.post(api.findOrderListBySuccess, opt, function (res) {
+                    app.list = res.payload;
+                    console.log(res);
+                    console.log("findList callback "+app.list);
+                }, function () {
+                }, false);
+
+
+
+            },
+
+            findChangGuanList: function () {
+                var opt = {
+
+                }
+                com.post(api.findChangGuanList, opt, function (res) {
+                    var list = res.payload;
+                    console.log(res);
+                    //添加select 存放指标id
+                    var obj = document.getElementById('search_changdi'); //定位id
+
+                    //空置可预约
+                    var n=1;
+                    for(var i=0;i<list.length;i++){
+                        obj.options[n++] = new Option( list[i].name, list[i].id);
+                    }
+
+                }, function () {
+                }, false);
+            },
+            showExportModal: function () {
+                if("" != $("#start_date").val()){
+                    document.getElementById("modal_start_date").innerHTML=$("#start_date").val();
+                }
+                if("" != $("#end_date").val()){
+                    document.getElementById("modal_end_date").innerHTML=$("#end_date").val();
+                }
+
+                var search_changdi = $('#search_changdi option:selected').html();
+                document.getElementById("modal_changguan").innerHTML= search_changdi;
+
+                $("#exportModal").show();
+            }
+        }
+    })
+    app.findList(1);
+    app.findChangGuanList();
+
+
+
+    $('#start_date').fdatepicker({
+        format: 'yyyy-mm-dd'
+
+    });
+    $('#end_date').fdatepicker({
+        format: 'yyyy-mm-dd'
+
+    });
+
+    function cancelModal() {
+        console.log("cancelModal");
+        $("#exportModal").hide();
+    }
+
+    function submitModal() {
+        console.log("submitModal");
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        var search_changdi = $("#search_changdi").val();
+        var search_state = $("#search_state").val();
+        console.log("start_date:"+start_date+" end_date:"+end_date);
+        var opt = {
+            "start_date": start_date,
+            "end_date": end_date,
+            "search_changdi": search_changdi,
+            "state": search_state
+        };
+
+        com.post(api.daochuExcel2, opt, function (res) {
+            console.log(res);
+            window.location.href=res.msg;
+        }, function () {
+        }, false)
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    $.getScript("js/page/baobiao.js");
+</script>

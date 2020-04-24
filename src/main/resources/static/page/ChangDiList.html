@@ -1,0 +1,1172 @@
+<html xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:overflow-y="http://www.w3.org/1999/xhtml">
+<head>
+    <title>商家管理</title>
+
+    <link href="https://back.zhanchengwlkj.com/atxca/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        ul{margin:0;padding:0;list-style:none;}
+        .table{display:table;border-collapse:collapse;border:1px solid #ccc;}
+        .table-caption{display:table-caption;margin:0;padding:0;font-size:16px;}
+        .table-column-group{display:table-column-group;}
+        .table-column{display:table-column;width:100px;}
+        .table-row-group{display:table-row-group;}
+        .table-row{display:table-row;}
+        .table-row:nth-child(even){background-color:#ececec;}
+        .table-row-group .table-row:hover,.table-footer-group .table-row:hover{background:#fff581;}
+        .table-cell{display:table-cell;padding:5px 5px 5px 5px;border:1px solid #ccc;}
+        .table-header-group{display:table-header-group;background-color:rgb(222, 222, 222);font-weight:bold;}
+        .table-footer-group{display:table-footer-group;}
+        /* #f9ffa2 */
+
+
+         .main-style {
+             width: 60%;
+             margin-left: 100px;
+         }
+
+        .left-label {
+            margin-left: 100px;
+            width: 100px;
+        }
+
+        .upload-file {
+            display: inline-block;
+            width: 160px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: #ec593f;
+            font-size: 18px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .type_li_style{
+            float:left;
+            margin-right:15px;
+            margin-bottom: 10px;
+        }
+
+        .type_item_style{
+            width:96px;
+            height:35px;
+            border-style:solid;
+            border-color:green;
+            border-width:1px;
+            text-align:center;
+            line-height:35px;
+        }
+
+
+
+        .type_a_style{
+            width:100px;
+            text-align:center;
+        }
+
+        .input_style{
+            width:150px;padding:.375rem .75rem;font-size:1rem;line-height:1.5;color:#495057;
+            background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;
+            border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="app"  >
+    <div  style="margin-left:30px;">
+        <div class="panel panel-default" >
+            <div class="panel-heading" style="height:150px;">
+                <h3>场馆名称：{{item.name}} <button type="button" class="btn btn-info btn-sm "  v-on:click="showModalByChangGuan()">修改名称</button></h3>
+
+
+
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-tabs">
+                    <li id="nav1" class="active">
+                        <a href="#tab1" data-toggle="tab" hidden="" >片场列表</a>
+                    </li>
+
+                    <li id="nav2">
+                        <a href="#tab2" data-toggle="tab" hidden="">时间段列表</a>
+                    </li>
+
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="tab1" style="padding-top:10px;">
+                        <button type="button" class="btn btn-info btn-sm "  v-on:click="view('批量关闭日期','ClosePianChangByMore.html','80','100',0)">批量关闭</button>
+                        <button type="button" class="btn btn-danger btn-sm "  v-on:click="deletePianChangByMore()">批量删除</button>
+                        <button type="button" class="btn btn-success" style="margin-left: 20px;"  v-on:click="showModalByAddPianChang()">批量增加片场</button>
+                        <br/>
+
+                        <div class="form-group">
+                            <div class="table">
+                                <div class="table-header-group">
+                                    <ul class="table-row">
+                                        <li class="table-cell" style="text-align:center;"><input type="checkbox" id="selectAllByPianChang" v-on:click="selectAllByPianChang()"/>全选</li>
+                                        <li class="table-cell" style="text-align:center;">片场名称</li>
+                                        <li class="table-cell" style="text-align:center;">排序</li>
+                                        <li class="table-cell" style="text-align:center;">操作</li>
+
+                                    </ul>
+                                </div>
+
+                                <div class="table-row-group">
+                                    <ul class="table-row" v-for="item in pianChangList" style="text-align:center;">
+                                        <li class="table-cell"><input type="checkbox" :id="'select_'+item.vid"/></li>
+                                        <li class="table-cell">{{ item.vname}}</li>
+                                        <li class="table-cell">{{ item.sort}}</li>
+
+                                        <li class="table-cell">
+                                                <button type="button" class="btn btn-info btn-sm" v-on:click="showModalByPianChang(item.vid,item.vname)">修改</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade " id="tab2" style="padding-top:10px;">
+                        <button type="button" class="btn btn-danger btn-sm "  v-on:click="deletePeriodTimeByMore()">批量删除</button>
+                        <button type="button" class="btn btn-success" style="margin-left: 20px;"  v-on:click="showModalByAddPeriodTime()">增加时间段</button>
+                        <br/>
+
+                        <div class="form-group">
+                            <div class="table">
+                                <div class="table-header-group">
+                                    <ul class="table-row">
+                                        <li class="table-cell" style="text-align:center;"><input type="checkbox" id="selectAllByTime" v-on:click="selectAllByTime()"/>全选</li>
+                                        <li class="table-cell" style="text-align:center;">时间段</li>
+                                        <li class="table-cell" style="text-align:center;">周一到周五价格</li>
+                                        <li class="table-cell" style="text-align:center;">周末价格</li>
+                                        <li class="table-cell" style="text-align:center;">排序</li>
+                                        <li class="table-cell" style="text-align:center;">操作</li>
+
+                                    </ul>
+                                </div>
+
+                                <div class="table-row-group">
+                                    <ul class="table-row" v-for="item in timeList" style="text-align:center;">
+                                        <li class="table-cell"><input type="checkbox" :id="'select_time_'+item.pid"/></li>
+                                        <li class="table-cell">{{ item.betTime}}</li>
+                                        <li class="table-cell">{{ item.price}}</li>
+                                        <li class="table-cell">{{ item.weekPrice}}</li>
+                                        <li class="table-cell">{{ item.sort}}</li>
+
+                                        <li class="table-cell">
+                                            <button type="button" class="btn btn-info btn-sm" v-on:click="showModalByUpdatePeriodTime(item.pid,item.betTime,item.sort,item.price,item.weekPrice)">修改</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<!--修改场馆名称模态窗口-->
+<div id="Modal2" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get">
+                <div class="modal-header">
+                    <strong>修改场馆</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">名称</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="houseName" name="name" class="form-control col-xs-10 col-sm-6" value="">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelModalByChangGuan()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="submitModalByChangGuan()">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改片场名称模态窗口-->
+<div id="ModalByUpdatePianChang" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get">
+                <div class="modal-header">
+                    <strong>修改片场</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">名称</label>
+                        <div class="input-group col-xs-7">
+                            <input type="hidden" id="pianChangId" name="pianChangId" class="form-control col-xs-10 col-sm-6" value="">
+                            <input type="text" id="pianChangName" name="pianChangName" class="form-control col-xs-10 col-sm-6" value="">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelModalByPianChang()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="submitModalByPianChang()">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--批量增加片场名称模态窗口-->
+<div id="ModalByAddPianChang" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get">
+                <div class="modal-header">
+                    <strong>修改片场</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">名称</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="add_pianchang_name" name="pianChangName_add" class="form-control col-xs-10 col-sm-6" value="###1###号">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">增加数量</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="add_pianchang_num" name="pianChangName_add" class="form-control col-xs-10 col-sm-6" value="1">
+                        </div>
+                    </div>
+
+                    <p>说明：###2###井号中间的数字为自动递增数，且必须为数字；其他的内容不限，比如你可以这样写：###1###号片场，第###2###场地....<br/>
+                        你也可以只增加一个片场，这样名称可以随意填写。
+                    </p>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelModalByAddPianChang()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="submitModalByAddPianChang()">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--增加时间段模态窗口-->
+<div id="ModalByAddPeriodTime" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get">
+                <div class="modal-header">
+                    <strong>批量增加时间段</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">选择时间段</label>
+
+                            <select class="input_style" id="add_periodtime_select">
+                                <option>9:00-10:00</option>
+                                <option>9:00-11:00</option>
+                                <option>10:00-11:00</option>
+                                <option>11:00-12:00</option>
+                                <option>12:00-13:00</option>
+                                <option>12:00-14:00</option>
+                                <option>13:00-14:00</option>
+                                <option>14:00-15:00</option>
+                                <option>14:00-16:00</option>
+                                <option>15:00-16:00</option>
+                                <option>16:00-17:00</option>
+                                <option>16:00-18:00</option>
+                                <option>17:00-18:00</option>
+                                <option>18:00-19:00</option>
+                                <option>18:00-20:00</option>
+                                <option>19:00-20:00</option>
+                                <option>20:00-21:00</option>
+                                <option>20:00-22:00</option>
+                                <option>21:00-22:00</option>
+                            </select>
+
+                        <button type="button" class="btn btn-info btn-sm "  onclick="addPeriodTimeSelectList()">增加</button>
+                    </div>
+
+                    <br/>
+                    <div class="form-group" style="padding-left:10px;">
+                        <ul id="add_periodtime_select_list">
+
+                        </ul>
+
+                    </div>
+                    <br/>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">周一到周五价格</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="add_periodtime_price" name="add_periodtime_price" class="form-control col-xs-10 col-sm-6" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">周末价格</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="add_periodtime_weekprice" name="add_periodtime_weekprice" class="form-control col-xs-10 col-sm-6" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">排序</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="add_periodtime_sort" name="add_periodtime_sort" class="form-control col-xs-10 col-sm-6" value="0">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelModalByAddPeriodTime()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="submitModalByAddPeriodTime()">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改时间段模态窗口-->
+<div id="ModalByUpdateTime" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get">
+                <div class="modal-header">
+                    <strong>修改时间段</strong>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">时间段</label>
+                        <div class="input-group col-xs-7">
+                            <h4 id="periodTimeName" name="periodTimeName"></h4>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">排序</label>
+                        <div class="input-group col-xs-7">
+                            <input type="hidden" id="timeId" name="timeId" class="form-control col-xs-10 col-sm-6" value="">
+                            <input type="text" id="timeSort" name="timeSort" class="form-control col-xs-10 col-sm-6" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">周一到周五价格</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="timePrice" name="timePrice" class="form-control col-xs-10 col-sm-6" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">周末价格</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="timeWeekPrice" name="timeWeekPrice" class="form-control col-xs-10 col-sm-6" value="">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelModalByTime()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="submitModalByTime()">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--批量关闭模态窗口-->
+<div id="Modal1" class="modal" style="width:700px;height:1000px;" >
+    <div class="modal-dialog animated">
+        <div class="modal-content" overflow-y:yes>
+            <form class="form-horizontal" method="get" id="editModals">
+                <div class="modal-header">
+                    <strong>关闭多个日期</strong>
+                </div>
+
+                <div class="modal-body" style="padding-left:20px;">
+
+                    <div class="form-group">
+                        <label class="control-label no-padding-right">关闭日期</label>
+                        <input type="text" class="input_style" value="" id="modal1_close_date" style="width: 120px">
+                        <button type="button" class="btn btn-info btn-sm "  onclick="addMoreDate()">增加</button>
+                    </div>
+
+                    <div class="form-group" style="padding-left:10px;">
+                            <ul id="select_type">
+
+                            </ul>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label no-padding-right">时间段</label>
+                        <select id="shijianduan" class="input_style" style="width:150px;"></select>
+                        <button type="button" class="btn btn-info btn-sm "  onclick="addMoreTime()">增加</button>
+                    </div>
+
+                    <div class="form-group" style="padding-left:10px;">
+                        <ul id="select_time">
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelModalByClose()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="submitModalByClose()">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://back.zhanchengwlkj.com/atxca/js/params.js"></script>
+<script src="https://back.zhanchengwlkj.com/atxca/assets/js/jquery-1.4.4.min.js"></script>
+<script src="https://back.zhanchengwlkj.com/atxca/assets/jquery/jquery.min.js"></script>
+
+
+
+
+<script src="https://back.zhanchengwlkj.com/atxca/assets/layer/layer.js"></script>
+<script src="https://back.zhanchengwlkj.com/atxca/js/bootstrap.min.js"></script>
+
+
+<script src="https://back.zhanchengwlkj.com/atxca/system/js/core.js"></script>
+<script src="https://back.zhanchengwlkj.com/atxca/js/vue.js"></script>
+
+<!--日期-->
+<script src="https://back.zhanchengwlkj.com/atxca/assets/js/foundation-datepicker.js"></script>
+<script src="https://back.zhanchengwlkj.com/atxca/assets/js/foundation-datepicker.zh-CN.js"></script>
+
+<!---->
+<script src="https://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
+
+
+<script type="text/javascript">
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            pianChangList: [],
+            timeList:[],
+            item:{},
+            id:0,
+            closeDateList:[],
+            closeTimeList:[],
+            selectPeriodTimeList:[]
+        },
+        // 在 `methods` 对象中定义方法
+        methods: {
+            findItem: function () {
+
+                $.ajax({
+                    url: api.findChangGuanById,
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        "id": app.id
+                    },
+                    async: false,
+                    success: function(res) {
+                        app.item = res.payload;
+                        console.log(res);
+                    },
+                    error: function() {
+                        alert("查询失败");
+                    }
+                });
+              ;
+
+            },
+            findPianChangList: function () {
+                $.ajax({
+                    url: api.findPianChangList,
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        "id": app.id
+                    },
+                    async: false,
+                    success: function(res) {
+                        app.pianChangList = res.payload;
+                        //取消全选
+                        for(var i=0;i<app.pianChangList.length;i++){
+                            $("#select_"+app.pianChangList[i].vid).prop("checked", false);
+                        }
+                        console.log(res);
+                    },
+                    error: function() {
+                        alert("查询失败");
+                    }
+                });
+            },
+            findTimeList: function () {
+                $.ajax({
+                    url: api.findPeriodTimeListById2,
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        "id": app.id
+                    },
+                    async: false,
+                    success: function(res) {
+                        app.timeList = res.payload;
+                        //取消全选
+                        for(var i=0;i<app.timeList.length;i++){
+                            $("#select_time_"+app.timeList[i].pid).prop("checked", false);
+                        }
+
+                        console.log(res);
+                        //添加select 存放指标id
+                        var obj = document.getElementById('shijianduan'); //定位id
+                        for(var i=0;i<app.timeList.length;i++){
+                            obj.options[i] = new Option( app.timeList[i].betTime, app.timeList[i].pid+"#"+app.timeList[i].betTime);
+                        }
+                    },
+                    error: function() {
+                        alert("查询失败");
+                    }
+                });
+            },
+            //查看详细信息
+            view: function (title,url,w,h,id){
+                var ids = "";
+                for(var i=0;i<app.pianChangList.length;i++){
+                    var select_all = document.getElementById("select_"+app.pianChangList[i].vid).checked;
+                    if(select_all){
+                        ids+=app.pianChangList[i].vid+",";
+                    }
+                }
+                if(ids==""){
+                    layer.msg("请先选中要关闭的片场");
+                    return;
+                }
+
+                if (title == null || title == '') {
+                    title=false;
+                };
+                if (url == null || url == '') {
+                    url="404.html";
+                };
+                if (w == null || w == '') {
+                    w=800;
+                };
+                if (h == null || h == '') {
+                    h=($(window).height() - 50);
+                };
+
+                console.log("id:"+id);
+                layer.open({
+                    type: 2,
+                    area: [w+'%', h +'%'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    shade:0.4,
+                    title: title,
+                    content: url+"?id="+app.id+"&ids="+ids
+                });
+            },
+            showModalByChangGuan: function () {
+                $("#houseName").val(app.item.name);
+                $("#Modal2").show();
+            },
+            showModalByPianChang: function (id,msg) {
+                $("#pianChangId").val(id);
+                $("#pianChangName").val(msg);
+                $("#ModalByUpdatePianChang").show();
+            },
+            showModalByUpdatePeriodTime: function (pid,betTime,sort,price,weekPrice) {
+                $("#timeId").val(pid);
+                $("#periodTimeName").html(betTime);
+                $("#timeSort").val(sort);
+                $("#timePrice").val(price);
+                $("#timeWeekPrice").val(weekPrice);
+                $("#ModalByUpdateTime").show();
+            },
+
+            closeMore: function () {
+                var ids = "";
+                for(var i=0;i<app.pianChangList.length;i++){
+                    var select_all = document.getElementById("select_"+app.pianChangList[i].vid).checked;
+                    if(select_all){
+                        ids+=app.pianChangList[i].vid+",";
+                    }
+                }
+                if(ids==""){
+                    layer.msg("请先选中要关闭的片场");
+                    return;
+                }
+                $("#Modal1").show();
+            },
+            selectAllByPianChang: function () {
+                var select_all = document.getElementById("selectAllByPianChang").checked;
+
+                if(select_all){
+                    //全选
+                    for(var i=0;i<app.pianChangList.length;i++){
+                        $("#select_"+app.pianChangList[i].vid).prop("checked", true);
+                    }
+                }else{
+                    //取消全选
+                    for(var i=0;i<app.pianChangList.length;i++){
+                        $("#select_"+app.pianChangList[i].vid).prop("checked", false);
+                    }
+                }
+            },
+            selectAllByTime: function () {
+                var select_all = document.getElementById("selectAllByTime").checked;
+                if(select_all){
+                    //全选
+                    for(var i=0;i<app.timeList.length;i++){
+                        $("#select_time_"+app.timeList[i].pid).prop("checked", true);
+                    }
+                }else{
+                    //取消全选
+                    for(var i=0;i<app.timeList.length;i++){
+                        $("#select_time_"+app.timeList[i].pid).prop("checked", false);
+                    }
+                }
+            },
+            showModalByAddPianChang: function () {
+                $("#ModalByAddPianChang").show();
+            },
+            showModalByAddPeriodTime: function () {
+                $("#ModalByAddPeriodTime").show();
+            },
+            deletePianChangByMore: function (id) {
+                var ids = "";
+                for(var i=0;i<app.pianChangList.length;i++){
+                    var select_all = document.getElementById("select_"+app.pianChangList[i].vid).checked;
+                    if(select_all){
+                        ids+=app.pianChangList[i].vid+",";
+                    }
+                }
+                if(ids==""){
+                    layer.msg("请先选中要删除的片场");
+                    return;
+                }
+
+                layer.confirm('确认要删除吗？',function(index){
+                    $.ajax({
+                        url: "https://back.zhanchengwlkj.com/atxca/front/deletePianChangByMore",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            "ids": ids
+                        },
+                        async: false,
+                        success: function(res) {
+                            app.findPianChangList();
+                        },
+                        error: function() {
+                            alert("修改失败");
+                        }
+                    });
+                    layer.close(index);
+                    // window.location.href="${pageContext.request.contextPath}/store/updateStatus2.html?id="+id+"&status=0";
+                });
+            },
+            deletePeriodTimeByMore: function (id) {
+                var ids = "";
+                for(var i=0;i<app.timeList.length;i++){
+                    var select_all = document.getElementById("select_time_"+app.timeList[i].pid).checked;
+                    if(select_all){
+                        ids+=app.timeList[i].pid+",";
+                    }
+                }
+                if(ids==""){
+                    layer.msg("请先选中要删除的时间段");
+                    return;
+                }
+
+                layer.confirm('确认要删除吗？',function(index){
+                    $.ajax({
+                        url: "https://back.zhanchengwlkj.com/atxca/front/deletePeriodTimeByMore",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            "ids": ids
+                        },
+                        async: false,
+                        success: function(res) {
+                            app.findTimeList();
+                        },
+                        error: function() {
+                            alert("修改失败");
+                        }
+                    });
+                    layer.close(index);
+                    // window.location.href="${pageContext.request.contextPath}/store/updateStatus2.html?id="+id+"&status=0";
+                });
+            }
+
+        }
+    })
+
+    function showCloseDateView(){
+        document.getElementById("select_type").innerHTML="";
+        var d=document.getElementById('select_type');
+
+        var strHtml = "\r\n";
+        for(var k=0;k<app.closeDateList.length;k++){
+            strHtml += "<li class=\"type_li_style\">\r\n";
+            strHtml += "<div class=\"type_style\">\r\n";
+            strHtml += "<div class=\"type_item_style\">\r\n";
+
+            strHtml += "<span class=\"type_text_style\">"+ app.closeDateList[k]+"</span>\r\n";
+            strHtml += "</div>\r\n";
+            strHtml += "<div class=\"type_a_style\">\r\n";
+            strHtml += "<a type=\"button\" href=\"javascript:;\" onclick=\"deleteCloseDate('"+app.closeDateList[k]+"')\" class=\"label label-success radius\">删除</a>\r\n";
+
+            strHtml += "</div>\r\n";
+            strHtml += "</div>\r\n";
+            strHtml += "</li>";
+
+        }
+        d.innerHTML=strHtml;
+    }
+
+    function showCloseTimeView(){
+        document.getElementById("select_time").innerHTML="";
+        var d=document.getElementById('select_time');
+
+        var strHtml = "\r\n";
+
+        for(var k=0;k<app.closeTimeList.length;k++){
+            var strs = app.closeTimeList[k].split("#");
+            console.log("strs length:"+strs.length);
+
+            strHtml += "<li class=\"type_li_style\">\r\n";
+            strHtml += "<div class=\"type_style\">\r\n";
+            strHtml += "<div class=\"type_item_style\">\r\n";
+
+            strHtml += "<span class=\"type_text_style\">"+ strs[1]+"</span>\r\n";
+            strHtml += "</div>\r\n";
+            strHtml += "<div class=\"type_a_style\">\r\n";
+            strHtml += "<a type=\"button\" href=\"javascript:;\" onclick=\"deleteCloseTime('"+app.closeTimeList[k]+"')\" class=\"label label-success radius\">删除</a>\r\n";
+
+            strHtml += "</div>\r\n";
+            strHtml += "</div>\r\n";
+            strHtml += "</li>";
+
+        }
+        d.innerHTML=strHtml;
+    }
+
+    function showPeriodTimeSelectListView(){
+        document.getElementById("add_periodtime_select_list").innerHTML="";
+        var d=document.getElementById("add_periodtime_select_list");
+
+        var strHtml = "\r\n";
+        for(var k=0;k<app.selectPeriodTimeList.length;k++){
+            strHtml += "<li class=\"type_li_style\">\r\n";
+            strHtml += "<div class=\"type_style\">\r\n";
+            strHtml += "<div class=\"type_item_style\">\r\n";
+
+            strHtml += "<span class=\"type_text_style\">"+ app.selectPeriodTimeList[k]+"</span>\r\n";
+            strHtml += "</div>\r\n";
+            strHtml += "<div class=\"type_a_style\">\r\n";
+            strHtml += "<a type=\"button\" href=\"javascript:;\" onclick=\"deletePeriodTimeSelect('"+app.selectPeriodTimeList[k]+"')\" class=\"label label-success radius\">删除</a>\r\n";
+
+            strHtml += "</div>\r\n";
+            strHtml += "</div>\r\n";
+            strHtml += "</li>";
+
+        }
+        d.innerHTML=strHtml;
+    }
+
+    function addMoreDate () {
+        var close_date = $("#modal1_close_date").val();
+        if(""==close_date){
+            layer.msg("请选择一个日期");
+            return;
+        }
+        //判断该日期是否已经存在
+        for(var k=0;k<app.closeDateList.length;k++){
+            if(app.closeDateList[k]==close_date){
+                console.log("存在该日期："+app.closeDateList[k]);
+                return;
+            }
+        }
+        app.closeDateList.push(close_date);
+        console.log("closeDateList:"+ app.closeDateList);
+        showCloseDateView();
+    }
+
+    function addMoreTime () {
+        var close_date = $("#shijianduan").val();
+        console.log("close_date:"+close_date);
+        if(""==close_date){
+            layer.msg("请选择一个时间段");
+            return;
+        }
+        //判断该日期是否已经存在
+        for(var k=0;k<app.closeTimeList.length;k++){
+            if(app.closeTimeList[k]==close_date){
+                console.log("存在该时间段："+app.closeTimeList[k]);
+                return;
+            }
+        }
+        app.closeTimeList.push(close_date);
+        console.log("closeTimeList:"+ app.closeTimeList);
+        showCloseTimeView();
+    }
+
+    function addPeriodTimeSelectList () {
+        var content = $("#add_periodtime_select").val();
+
+        //判断该内容是否已经存在
+        for(var k=0;k<app.selectPeriodTimeList.length;k++){
+            if(app.selectPeriodTimeList[k]==content){
+                console.log("存在该内容："+app.selectPeriodTimeList[k]);
+                return;
+            }
+        }
+        app.selectPeriodTimeList.push(content);
+        console.log("closeDateList:"+ app.selectPeriodTimeList);
+        showPeriodTimeSelectListView();
+    }
+
+    function deletePeriodTimeSelect(date){
+        console.log("deletePeriodTimeSelect:"+date);
+        console.log(app.selectPeriodTimeList);
+        for(var k=0;k<app.selectPeriodTimeList.length;k++){
+            if(app.selectPeriodTimeList[k]==date){
+                console.log("找到了："+app.selectPeriodTimeList[k]);
+                app.selectPeriodTimeList.splice(k,1);//删除当前索引元素
+                break;
+            }
+        }
+        showPeriodTimeSelectListView();
+    }
+
+    function deleteCloseDate(date){
+        console.log("deleteCloseDate:"+date);
+        console.log(app.closeDateList);
+        for(var k=0;k<app.closeDateList.length;k++){
+            if(app.closeDateList[k]==date){
+                console.log("找到了："+app.closeDateList[k]);
+                app.closeDateList.splice(k,1);//删除当前索引元素
+                break;
+            }
+        }
+        showCloseDateView();
+    }
+
+    function deleteCloseTime(date){
+        console.log("deleteCloseTime:"+deleteCloseTime);
+        console.log(app.closeTimeList);
+        for(var k=0;k<app.closeTimeList.length;k++){
+            if(app.closeTimeList[k]==date){
+                console.log("找到了："+app.closeTimeList[k]);
+                app.closeTimeList.splice(k,1);//删除当前索引元素
+                break;
+            }
+        }
+        showCloseTimeView();
+    }
+
+    function cancelModalByChangGuan() {
+        console.log("cancelModalByChangGuan");
+        $("#Modal2").hide();
+    }
+    function submitModalByChangGuan() {
+        var name = $("#houseName").val();
+        console.log("场馆新名称："+name);
+        $.ajax({
+            url: api.updateChangGuan,
+            type: "POST",
+            dataType: "json",
+            data: {
+                "id": app.id,
+                "name":name
+            },
+            async: false,
+            success: function(res) {
+                app.findItem();
+                $("#Modal2").hide();
+            },
+            error: function() {
+                alert("修改失败");
+            }
+        });
+    }
+
+    function cancelModalByPianChang() {
+        console.log("cancelModalByChangGuan");
+        $("#ModalByUpdatePianChang").hide();
+    }
+    function submitModalByPianChang() {
+        var name = $("#pianChangName").val();
+        var id = $("#pianChangId").val();
+        console.log("片场新名称："+name);
+        $.ajax({
+            url: api.updatePianChang,
+            type: "POST",
+            dataType: "json",
+            data: {
+                "id": id,
+                "name":name
+            },
+            async: false,
+            success: function(res) {
+                app.findPianChangList();
+                $("#ModalByUpdatePianChang").hide();
+            },
+            error: function() {
+                alert("修改失败");
+            }
+        });
+    }
+
+    function cancelModalByTime() {
+        console.log("cancelModalByTime");
+        $("#ModalByUpdateTime").hide();
+    }
+    function submitModalByTime() {
+        var pid = $("#timeId").val();
+        var betTime = $("#periodTimeName").val();
+        var sort = $("#timeSort").val();
+        var price = $("#timePrice").val();
+        var weekPrice = $("#timeWeekPrice").val();
+
+        console.log("时间段id："+pid);
+        $.ajax({
+            url: "https://back.zhanchengwlkj.com/atxca/front/updatePeriodTime",
+            type: "POST",
+            dataType: "json",
+            data: {
+                "pid": pid,
+                "betTime":betTime,
+                "sort": sort,
+                "price":price,
+                "weekPrice": weekPrice
+            },
+            async: false,
+            success: function(res) {
+                app.findTimeList();
+                $("#ModalByUpdateTime").hide();
+            },
+            error: function() {
+                alert("修改失败");
+            }
+        });
+    }
+
+    function cancelModalByClose() {
+        console.log("cancelModalByClose");
+        $("#Modal1").hide();
+    }
+    function submitModalByClose() {
+        if(app.closeDateList.length == 0){
+            layer.msg("请选择要关闭的日期");
+            return;
+        }
+        if(app.closeTimeList.length == 0){
+            layer.msg("请选择要关闭的时间段");
+            return;
+        }
+
+
+        var ids = "";
+        for(var i=0;i<app.pianChangList.length;i++){
+            var select_all = document.getElementById("select_"+app.pianChangList[i].vid).checked;
+            if(select_all){
+                ids+=app.pianChangList[i].vid+",";
+            }
+        }
+
+        var times = "";
+        for(var i=0;i<app.closeTimeList.length;i++){
+            var strs = app.closeTimeList[i].split("#");
+            times+=strs[0]+",";
+        }
+
+        var dates="";
+        for(var i=0;i<app.closeDateList.length;i++){
+            dates+=app.closeDateList[i]+",";
+        }
+
+
+        console.log("ids："+ids);
+        console.log("dates："+dates);
+        console.log("times："+times);
+        $.ajax({
+            url: api.addCloseDateTimeByMore,
+            type: "POST",
+            dataType: "json",
+            data: {
+                "times": times,
+                "ids":ids,
+                "dates":dates
+            },
+            async: false,
+            success: function(res) {
+                app.findPianChangList();
+
+                $("#Modal1").hide();
+            },
+            error: function() {
+                alert("修改失败");
+            }
+        });
+    }
+
+
+    function cancelModalByAddPianChang() {
+        console.log("cancelModalByAddPianChang");
+        $("#ModalByAddPianChang").hide();
+    }
+    function submitModalByAddPianChang() {
+        var name = $("#add_pianchang_name").val();
+        var num = $("#add_pianchang_num").val();
+        if(""==name){
+            layer.msg("请输入名称");
+            return;
+        }
+        if(num==0){
+            layer.msg("数量必须大于0");
+            return;
+        }
+        console.log("片场新名称："+name+" num:"+num);
+
+        $.ajax({
+            url: "https://back.zhanchengwlkj.com/atxca/front/addPianChangByMore",
+            type: "POST",
+            dataType: "json",
+            data: {
+                "id": app.id,
+                "name":name,
+                "num":num
+            },
+            async: false,
+            success: function(res) {
+                app.findPianChangList();
+                $("#ModalByAddPianChang").hide();
+            },
+            error: function() {
+                alert("修改失败");
+            }
+        });
+    }
+
+    function cancelModalByAddPeriodTime() {
+        console.log("cancelModalByAddPeriodTime");
+        $("#ModalByAddPeriodTime").hide();
+    }
+    function submitModalByAddPeriodTime() {
+        if(app.selectPeriodTimeList.length==0){
+            layer.msg("请增加一个时间段");
+            return;
+        }
+        var content="";
+        for(var i=0;i<app.selectPeriodTimeList.length;i++){
+            content+=app.selectPeriodTimeList[i]+",";
+        }
+        var price = $("#add_periodtime_price").val();
+        var weekprice = $("#add_periodtime_weekprice").val();
+        var sort = $("#add_periodtime_sort").val();
+        if(price==""){
+            layer.msg("请输入价格");
+            return;
+        }
+        if(weekprice==""){
+            layer.msg("请输入价格");
+            return;
+        }
+        if(sort==""){
+            layer.msg("请输入排序");
+            return;
+        }
+        console.log("submitModalByAddPeriodTime content："+content);
+
+        $.ajax({
+            url: "https://back.zhanchengwlkj.com/atxca/front/addPeriodTimeByMore",
+            type: "POST",
+            dataType: "json",
+            data: {
+                "id": app.id,
+                "content":content,
+                "price":price,
+                "weekPrice":weekprice,
+                "sort":sort
+            },
+            async: false,
+            success: function(res) {
+                app.findTimeList();
+                $("#ModalByAddPeriodTime").hide();
+            },
+            error: function() {
+                alert("添加失败");
+            }
+        });
+    }
+
+    $('#modal1_close_date').fdatepicker({
+        format: 'yyyy-mm-dd'
+    });
+
+    function bigImg(x){
+        x.style.height="800px";
+        x.style.width="800px";
+    }
+    function normalImg(x){
+        x.style.height="250px";
+        x.style.width="250px";
+    }
+
+    function getId(){
+        app.id = GetQueryString("id");
+        console.log("id:"+app.id);
+    }
+    getId();
+    app.findItem();
+    app.findPianChangList();
+    app.findTimeList();
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r != null) return decodeURI(r[2]);
+        return null;
+    }
+
+
+</script>
+
+
+</body>
+</html>
+

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atxca.mybatis.dao.OrderDao2">
+
+	<select id="findOrderListByOpenId" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order o
+		WHERE
+			o.openid = #{openid}
+		ORDER BY
+			o.oid DESC
+	</select>
+
+
+	<select id="findOrderListByWaitAndOpenId" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order o
+		WHERE
+			o.openid = #{openid}
+		AND
+			o.type = #{type}
+	</select>
+
+	<select id="findVenueListByVhouseId2" resultType="com.atxca.mybatis.entity.PianChangPO">
+		SELECT
+			*
+		FROM
+			venues
+		WHERE
+			groups = #{id}
+		ORDER BY
+		    sort DESC
+	</select>
+
+	<select id="findOrderCountByChangGuanIdAndDateAndStateMore" resultType="Integer">
+		SELECT
+			count(*)
+		FROM
+			zc_order o
+		WHERE
+			o.vid in (select vid from venues where groups = #{id})
+		AND
+			o.reserveTime = #{date}
+		AND
+			o.type = #{type}
+	</select>
+
+
+
+	<select id="findPeriodTimeCloseByVidAndDate" resultType="Integer">
+		SELECT
+			count(*)
+		FROM
+			periodtime_close
+		WHERE
+			venues_id in (select vid from venues where groups = #{id})
+		AND
+		   close_date = #{date}
+	</select>
+
+</mapper>

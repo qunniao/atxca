@@ -1,0 +1,50 @@
+spring:
+    mvc:
+      view:
+        prefix: /
+        suffiex: .html
+    jmx:
+      enabled: false
+    jpa:
+        hibernate:
+        #数据库生成模式 none为不操作
+          ddl-auto: update
+          naming:
+            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        show-sql: true
+#        open-in-view: true
+#    database-platform: org.hibernate.dialect.MySQLDialect
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        druid:
+          filters: stat
+          driver-class-name: com.mysql.cj.jdbc.Driver
+#          url: jdbc:mysql://127.0.0.1:3306/atxca?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT
+          url: jdbc:mysql://47.110.34.1:3306/atxca?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT
+          username: root
+          password: gjymaster789.
+#          password: root
+#          password: zc24615.
+          initial-size: 1
+          min-idle: 1
+          max-active: 20
+          max-wait: 60000
+          time-between-eviction-runs-millis: 60000
+          min-evictable-idle-time-millis: 300000
+          validation-query: SELECT 'x'
+          test-while-idle: true
+          test-on-borrow: false
+          test-on-return: false
+          pool-prepared-statements: false
+          max-pool-prepared-statement-per-connection-size: 20
+
+logging:
+  level:
+    com.baoge: debug
+
+#Mybatis配置
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+  configLocation: classpath:mybatis.xml
+  type-aliases-package: com.zhanchengwlkj.zmybatis.mapperLocations=classpath:mapper/*.xml

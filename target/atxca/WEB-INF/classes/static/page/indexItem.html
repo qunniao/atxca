@@ -1,0 +1,557 @@
+<div id="app" xmlns:v-on="http://www.w3.org/1999/xhtml">
+    <div id="head">
+
+        <table id="pageList3" class="table table-striped">
+            <tr>
+                <td>
+                        <label class="cform-control ol-sm-3 control-label no-padding-right" for="usertimes">日期</label>
+                        <input type="text" class="input_style" value="" id="usertimes" >
+
+
+                    <label class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;" for="shijianduan">时间段</label>
+                    <select class="input_style" id="shijianduan">
+                        <option>9:00-10:00</option>
+                        <option>9:00-11:00</option>
+                        <option>10:00-11:00</option>
+                        <option>11:00-12:00</option>
+                        <option>12:00-13:00</option>
+                        <option>12:00-14:00</option>
+                        <option>13:00-14:00</option>
+                        <option>14:00-15:00</option>
+                        <option>14:00-16:00</option>
+                        <option>15:00-16:00</option>
+                        <option>16:00-17:00</option>
+                        <option>16:00-18:00</option>
+                        <option>17:00-18:00</option>
+                        <option>18:00-19:00</option>
+                        <option>18:00-20:00</option>
+                        <option>19:00-20:00</option>
+                        <option>20:00-21:00</option>
+                        <option>20:00-22:00</option>
+                        <option>21:00-22:00</option>
+                    </select>
+
+                    <label class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;" for="changguan_type">场馆类型</label>
+                    <select class="input_style" id="changguan_type">
+                        <option value="0">全部类型</option>
+
+                    </select>
+
+                    <button type="button"  class="btn btn-info" style="margin-left: 20px;" v-on:click="findList()">查询</button>
+                </td>
+
+                <td>
+                    <button type="button" id="adx7" class="btn btn-warning">增加场馆</button>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <div class="col-12 maximum-margin">
+        <div class="card-body p-0">
+            <p>
+                <span style="background-color: green">绿色</span>：空置可被预约，
+                <span style="background-color: yellow">黄色</span>：预约成功，
+                <span style="background-color: blue">蓝色</span>：正在被使用，
+                <span style="background-color: gray">灰色</span>：已被内部关闭。
+            </p>
+            <div class="table">
+                <div class="table-header-group" >
+                    <ul class="table-row">
+                        <li class="table-cell" style="width:150px;">场馆</li>
+                        <li class="table-cell">片场</li>
+                        <li class="table-cell" style="width:60px;">操作</li>
+                    </ul>
+                </div>
+                <div class="table-row-group">
+                    <ul class="table-row" v-for="item in list">
+                        <li class="table-cell" style="text-align: center;line-height: 30px;">
+                            <div class="main_left_text">
+                                <a href="javascript:;" v-on:click="view('查看场馆详细信息','page/ChangDiList.html','80','95',item.vhouse.id)" ><font color="blue">{{item.vhouse.name}}</font></a>
+                            </div>
+                        </li>
+                        <li class="table-cell pianchang1">
+                            <ul >
+                                <li v-for="c in item.venuePOList">
+                                    <div>
+                                        <div v-if="c.yuyue_state==-1" class="main_gray">
+                                            <h5>{{c.vname}}</h5>
+                                        </div>
+                                        <div v-if="c.yuyue_state==1" class="main_red">
+                                            <h5>{{c.vname}}</h5>
+                                        </div>
+                                        <div v-if="c.yuyue_state==2" class="main_yellow">
+                                            <h5>{{c.vname}}</h5>
+                                        </div>
+                                        <div v-if="c.yuyue_state==5" class="main_yellow">
+                                            <h5>{{c.vname}}</h5>
+                                        </div>
+                                        <div v-if="c.yuyue_state==7" class="main_blue">
+                                            <h5>{{c.vname}}</h5>
+                                        </div>
+                                        <div v-if="c.yuyue_state==6" class="main_blue">
+                                            <h5>{{c.vname}}</h5>
+                                        </div>
+                                        <div v-if="c.yuyue_state==0" class="main_green">
+                                            <h5>{{c.vname}}</h5>
+                                        </div>
+                                        <div v-if="c.yuyue_state==4" class="main_green">
+                                            <h5>{{c.vname}}</h5>
+                                        </div>
+                                        <button type="button" class="btn btn-primary"  v-on:click="updateStateSetId(c.vid,c.yuyue_state)">修改状态</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="table-cell">
+                            <div class="main_left_text">
+                                <button type="button" class="btn btn-default btn-sm "  v-on:click="deleteItem(item.vhouse.id)">删除场馆</button>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="viewPopUp" class="portlet box"></div>
+
+
+<!--增加模态窗口-->
+<div id="addVhouse" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get">
+                <div class="modal-header">
+                    <strong>增加场馆</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="vName" class="control-label col-xs-4">名称</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="houseName" name="vName" class="form-control col-xs-10 col-sm-6"
+                                   required>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-xs-4">类型</label>
+                    <div class="input-group col-xs-7">
+                        <select id="vhouseType" name="vhouseType" class="form-control col-xs-10 col-sm-6"
+                                data-toggle="popover"
+                                data-trigger='manual' required></select>
+                        <span class='star'></span>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" id="exitss">取消</button>
+                    <button class="btn btn-primary" type="button" id="saveVhouse">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--增加模态窗口-->
+<div id="addVenue" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get" id="modaltest">
+                <div class="modal-header">
+                    <strong>增加场地</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="cform-control ol-sm-3 control-label no-padding-right" for="VenuePOtype">所属场馆</label>
+                        <div class="col-sm-9">
+                            <select id="VenuePOtype" name="VenuePOtype"
+                                    class="form-control col-xs-10 col-sm-6 v_required"
+                                    data-toggle="popover"
+                                    data-trigger='manual' required></select>
+                            <span class='star'></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vName" class="cform-control ol-sm-3 control-label no-padding-right">名称</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="vName" name="vName" class="form-control col-xs-10 col-sm-6" required>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" id="exits">取消</button>
+                    <button class="btn btn-primary" type="button" id="savess">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--增加模态窗口-->
+<div id="editModal" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get" id="editModals">
+                <div class="modal-header">
+                    <strong>增加场地</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="VenuePOtypess">所属场馆</label>
+                        <div class="col-sm-9">
+                            <select id="VenuePOtypess" name="VenuePOtype"
+                                    class="form-control col-xs-10 col-sm-6 v_required"
+                                    data-toggle="popover"
+                                    data-trigger='manual' required></select>
+                            <span class='star'></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="cform-control ol-sm-3 control-label no-padding-right" for="groupss">组别</label>
+                        <div class="col-sm-9">
+                            <select id="groupss" name="groups" class="form-control col-xs-10 col-sm-6"
+                                    data-toggle="popover"
+                                    data-trigger='manual' required></select>
+                            <span class='star'></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="cform-control ol-sm-3 control-label no-padding-right" for="statuss">组别</label>
+                        <div class="col-sm-9">
+                            <select id="statuss" name="groups" class="form-control col-xs-10 col-sm-6"
+                                    data-toggle="popover"
+                                    data-trigger='manual' required>
+                                <option value="0">禁用</option>
+                                <option value="1">启用</option>
+                            </select>
+                            <span class='star'></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vNames" class="control-label col-xs-4">名称</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" id="vNames" name="vName" class="form-control col-xs-10 col-sm-6" required>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" id="exitsas">取消</button>
+                    <button class="btn btn-primary" type="button" id="savessas">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改片场状态模态窗口-->
+<div id="editStateModal" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get" id="editStateModals">
+                <input type="hidden" id="update_id" name="update_id" value=""/>
+                <input type="hidden" id="udapte_state" name="update_state" value=""/>
+                <div class="modal-header">
+                    <strong>修改片场当前日期下的当前时间段的预约状态</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="VenuePOtypess">片场状态</label>
+                        <div class="col-sm-9">
+                            <select id="selectState" name="selectState"
+                                    class="form-control col-xs-10 col-sm-6 v_required"
+                                    data-toggle="popover"
+                                    data-trigger='manual' required>
+
+                            </select>
+                            <span class='star'></span>
+                        </div>
+                        <p>
+                            说明：
+                        </p>
+                        <p>
+                            正在被使用: 该时间段没有预约订单将增加一条匿名预约订单,订单状态为已到场；已有预约订单则将订单状态改为预约已到场。
+                        </p>
+                        <p>
+                            空置可被预约: 该时间段已有预约订单的话，将会把订单状态改为预约失败，并且外部可以预约。
+                        </p>
+                        <p>
+                            内部关闭: 该时间段已有预约订单的话，将会把订单状态改为预约失败，并且外部无法预约。
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelMotai()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="updateState()">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.getScript("js/page/indexItem.js");
+</script>
+
+<script type="text/javascript">
+    var first = true;
+    var app = new Vue({
+        el: '#app',
+        data: {
+            list: [],
+            date:"",
+            typeList:[]
+        },
+        // 在 `methods` 对象中定义方法
+        methods: {
+            findList: function () {
+                var shijianduan = $('#shijianduan option:selected').val();
+                console.log("时间段:" + shijianduan);
+
+                var usertimes = $('#usertimes').val();
+                console.log("日期:" + usertimes);
+
+                var changguan_type = $('#changguan_type').val();
+                console.log("场馆类型:" + changguan_type);
+
+
+                var opt = {
+                    "date": usertimes,
+                    "time": shijianduan,
+                    "changguan_type": changguan_type
+                }
+                com.post(api.findChangDiList, opt, function (res) {
+                    app.list = res.payload;
+                    console.log(res);
+                    console.log("findList callback "+app.list);
+                }, function () {
+                }, false);
+
+
+
+            },
+            findChangGuanTypeList: function () {
+                var opt = {
+                }
+                com.post(api.findChangGuanTypeList, opt, function (res) {
+                    console.log("findChangGuanTypeList res:");
+                    console.log(res);
+                    var list = res.payload;
+                    //添加select 存放指标id
+                    var obj = document.getElementById('changguan_type'); //定位id
+
+                    //空置可预约
+                    var n=1;
+                    for(var i=0;i<list.length;i++){
+                        obj.options[n++] = new Option( list[i].name, list[i].id);
+                    }
+
+                    console.log(res);
+                }, function () {
+                }, false);
+
+
+
+            },
+            //查看详细信息
+            view: function (title,url,w,h,id){
+                if (title == null || title == '') {
+                    title=false;
+                };
+                if (url == null || url == '') {
+                    url="404.html";
+                };
+                if (w == null || w == '') {
+                    w=800;
+                };
+                if (h == null || h == '') {
+                    h=($(window).height() - 50);
+                };
+
+                console.log("id:"+id);
+                layer.open({
+                    type: 2,
+                    area: [w+'%', h +'%'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    shade:0.4,
+                    title: title,
+                    content: url+"?id="+id
+                });
+            },
+            updateStateSetId: function (vid,yuyue_state) {
+                $("#update_id").val(vid);
+                $("#udapte_state").val(yuyue_state);
+
+                //添加select 存放指标id
+                var obj = document.getElementById('selectState'); //定位id
+
+                //空置可预约
+                obj.options[0] = new Option( "正在被使用", 7);
+                obj.options[1] = new Option( "空置可预约", 0);
+                obj.options[2] = new Option( "内部关闭", -1);
+
+
+
+
+                $("#editStateModal").show();
+            },
+            deleteItem: function (id) {
+                layer.confirm('确认要删除该场馆吗？',function(index){
+                    var opt = {
+                        "id":id
+                    }
+                    com.post(api.deleteChangGuanById, opt, function (res) {
+                        console.log(res);
+                        app.findList();
+                    }, function () {
+                    }, false);
+                    layer.close(index);
+                    // window.location.href="${pageContext.request.contextPath}/store/updateStatus2.html?id="+id+"&status=0";
+                });
+            }
+        }
+    })
+
+
+    function cancelMotai(){
+        console.log("cancelMotai");
+        $("#editStateModal").hide();
+    }
+
+
+    function updateState(){
+        var shijianduan = $('#shijianduan option:selected').val();
+        console.log("时间段:" + shijianduan);
+
+        var usertimes = $('#usertimes').val();
+        console.log("日期:" + usertimes);
+
+        var id = $("#update_id").val();
+        var old_state = $("#udapte_state").val();
+        var new_state = $("#selectState").val();
+        console.log("id:"+id+" old_state:"+old_state+" new_state:"+new_state);
+
+        var opt = {
+            "date": usertimes,
+            "time": shijianduan,
+            "id": id,
+            "old_state": old_state,
+            "new_state": new_state
+        }
+        com.post(api.updatePianChangState, opt, function (res) {
+            console.log(res);
+            layer.msg(res.msg);
+            app.findList();
+            $("#editStateModal").hide();
+        }, function () {
+        }, false);
+    }
+
+  function getDate(){
+      console.log("当前日期:"+app.date);
+      var myDate = new Date();
+      var year = myDate.getFullYear();
+      var month = myDate.getMonth()+1;
+      var day = myDate.getDate();
+      if(month < 10)month="0"+month;
+      if(day < 10)day="0"+day;
+      app.date = year+"-"+month+"-"+day;        //获取当前年份(4位)
+
+      $("#usertimes").val(app.date);
+      console.log("当前日期:"+app.date);
+  }
+
+    //显示场馆弹出
+    $("#adx7").click(function () {
+        $("#houseName").val("");
+        if(first){
+            $("#VenuePOtype").empty();
+            com.post(api.queryTypePO, null, function (res) {
+                app.typeList=res.data;
+                console.log("类型列表：");
+                console.log(app.typeList);
+                $("#vhouseType").bindData(res.data, "id", "name", true);
+            }, function () {
+                console.log("错误");
+            }, false);
+            first = false;
+        }
+
+        $("#addVhouse").show();
+    });
+    $("#exitss").click(function () {
+        $("#addVhouse").hide();
+    });
+
+    ///增加场馆
+    $("#saveVhouse").click(function () {
+        var name = $("#houseName").val();
+        var type = $("#vhouseType").val();
+        if (name == "" || name == null) {
+            alert("名称不能为空");
+            return
+        }
+        if (type == "" || type == null) {
+            alert("类型不能为空");
+            return
+        }
+        var url = "";
+        for(var i=0;i<app.typeList.length;i++){
+           if(type==app.typeList[i].id) {
+               console.log("找到了分类，url:"+app.typeList[i].url);
+               url = app.typeList[i].url;
+               break;
+           }
+        }
+        com.post(api.addVhouse, {"name": name, "type": type, "url": url}, function (res) {
+            console.log(res);
+            $("#addVhouse").hide();
+            layer.msg('保存成功!');
+            app.findList();
+        }, function () {
+        }, false)
+
+    });
+    $('#usertimes').fdatepicker({
+        format: 'yyyy-mm-dd'
+
+    });
+    getDate();
+    app.findList();
+    app.findChangGuanTypeList();
+</script>
