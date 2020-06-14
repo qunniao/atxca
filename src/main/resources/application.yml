@@ -21,11 +21,9 @@ spring:
           filters: stat
           driver-class-name: com.mysql.cj.jdbc.Driver
 #          url: jdbc:mysql://127.0.0.1:3306/atxca?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT
-          url: jdbc:mysql://47.110.34.1:3306/atxca?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT
-          username: root
-          password: gjymaster789.
-#          password: root
-#          password: zc24615.
+          url: jdbc:mysql://rm-bp13ii11jks6q8nfdho.mysql.rds.aliyuncs.com:3306/atxca?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=Asia/Shanghai
+          username: admin18
+          password: Admin189527
           initial-size: 1
           min-idle: 1
           max-active: 20
@@ -42,6 +40,14 @@ spring:
 logging:
   level:
     com.baoge: debug
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+deploy:
+  hostname: http://localhost:8080/
 
 #Mybatis配置
 mybatis:

@@ -27,10 +27,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.atxca.order.Controller.OrderController.*;
 
@@ -259,6 +256,7 @@ public class OrderServiceImpl implements OrderService {
        // LOG.info("periodTimeList size:"+periodTimeList.size());
         int y,m,d,h=0,mi,s;
         Calendar cal= Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis()+8*60*60*1000);
         String date="";
         String mm="";
         String dd ="";
@@ -283,7 +281,7 @@ public class OrderServiceImpl implements OrderService {
                 dd = d+"";
             }
             date=y+"-"+mm+"-"+dd;
-
+            LOG.info("date:"+date+" hour:"+h+" m:"+ cal.get(Calendar.MINUTE));
 
             //计算星期几
             try {
