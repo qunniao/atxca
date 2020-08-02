@@ -62,4 +62,56 @@
 		   c.close_date = #{date}
 	</select>
 
+	<select id="findOrderListByReserveTimeLessThan" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			*
+		FROM
+			zc_order o
+		WHERE
+			o.reserveTime &lt; #{date}
+		order by o.oid desc
+	</select>
+
+	<update id="updateOrderType" parameterType="Integer">
+		UPDATE
+		zc_order o
+		<set>
+				o.type=#{type}
+		</set>
+		WHERE
+		o.oid = #{oid}
+	</update>
+
+	<select id="findOrderHistoryByOrderId" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			*
+		FROM
+			zc_order_history h
+		WHERE
+			h.orderId = #{orderId}
+	</select>
+
+	<insert id="addOrderHistory" parameterType="com.atxca.mybatis.entity.Order">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="oid">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT  INTO zc_order_history (pid,vid,openid,orderId,name,phone,betTime,reserveTime,price,type,remakes,createTime)
+		VALUES (#{pid},#{vid}, #{openid}, #{orderId}, #{name}, #{phone}, #{betTime}, #{reserveTime}, #{price}, #{type}, #{remakes}, #{createTime})
+	</insert>
+
+	<delete id="deleteOrderByOid">
+		delete
+		FROM
+			zc_order
+        WHERE
+			oid = #{id}
+	</delete>
+
+	<select id="findOrderListByAll" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			*
+		FROM
+			zc_order
+	</select>
+
 </mapper>

@@ -1,35 +1,20 @@
 package com.atxca.mybatis.service.impl;
 
 import com.atxca.Util.*;
-import com.atxca.data.PO.TypePO;
 import com.atxca.mybatis.dao.ChangGuanPeriodTimeDao;
 import com.atxca.mybatis.dao.OrderDao2;
 import com.atxca.mybatis.entity.*;
 import com.atxca.mybatis.service.OrderService;
-import com.atxca.mybatis.service.PeriodTimeService;
 import com.atxca.order.PO.OrderPO;
-import com.atxca.sportshall.PO.VenuePO;
-import com.atxca.sportshall.PO.Vhouse;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.atxca.order.Controller.OrderController.*;
+import static com.atxca.order.service.serviceImpl.OrderJpaServiceImpl.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -595,6 +580,38 @@ public class OrderServiceImpl implements OrderService {
         }
         return R.ok(200);
 
+    }
+
+    @Override
+    public List<Order> findOrderListByReserveTimeLessThan(Date date) {
+        List<Order> list = dao.findOrderListByReserveTimeLessThan(date);
+        return list;
+    }
+
+    @Override
+    public void updateOrderType(int oid, int type) {
+        dao.updateOrderType(oid, type);
+    }
+
+    @Override
+    public Order findOrderHistoryByOrderId(String orderId) {
+        Order order = dao.findOrderHistoryByOrderId(orderId);
+        return order;
+    }
+
+    @Override
+    public void addOrderHistory(Order order) {
+        dao.addOrderHistory(order);
+    }
+
+    @Override
+    public void deleteOrderByOid(int oid) {
+        dao.deleteOrderByOid(oid);
+    }
+
+    @Override
+    public List<Order> findOrderListByAll() {
+        return dao.findOrderListByAll();
     }
 }
 

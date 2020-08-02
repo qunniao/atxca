@@ -9,6 +9,7 @@ import com.atxca.order.PO.OrderPO;
 import com.atxca.sportshall.PO.VenuePO;
 import com.atxca.sportshall.PO.Vhouse;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ChangGuanPeriodTimeDao extends BaseDao<PeriodTime> {
@@ -119,4 +120,47 @@ public interface ChangGuanPeriodTimeDao extends BaseDao<PeriodTime> {
     List<Order> findOrderListByChangGuanAndStateSuccess(int orderTypeReach, int orderTypeReachAlipay, String changdi, int page, int pageSize, String phone, String name);
 
     List<Order> findOrderListByChangGuanAndStateStartDateEndDateSuccess(int orderTypeReach, int orderTypeReachAlipay, String changdi, String start_date, String end_date, int page, int pageSize);
+
+    List<Order> findOrderListHistoryByPhone(String phone);
+
+    List<Order> findOrderListHistoryByName(String name);
+
+    List<Order> findOrderListHistoryByChangGuanAndStateAndTime(String type, String changdi, String betTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByChangGuanAndStateAndDate(String type, String changdi, String reserveTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByChangGuanAndStateAndDateTime(String type, String changdi, String reserveTime, String betTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByChangGuanAndState(Integer type, String changdi, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByChangGuanAndTime(String changdi, String time, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByChangGuanAndDate(String changdi, String reserveTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByChangGuanAndDateTime(String changdi, String reserveTime, String betTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByChangGuan(String changdi, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByAllAndStateAndTime(String type, String betTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByAllAndStateAndDate(String type, String reserveTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByAllAndStateAndDateTime(String type, String reserveTime, String betTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByAllAndState(Integer type, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByAllAndTime(String betTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByAllAndDate(String reserveTime, int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByAll(int page, int pageSize, String phone, String name);
+
+    List<Order> findOrderListHistoryByAllAndDateTime(String reserveTime, String betTime, int page, int pageSize, String phone, String name);
+
+    void deleteOrderHistoryById(Integer id);
+
+    List<PeriodTimeClose> findPeriodTimeCloseListByCloseDateLessThan(Date date);
+
+    void deletePeriodTimeCloseById(int id);
+
 }

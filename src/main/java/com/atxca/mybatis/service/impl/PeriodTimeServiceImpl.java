@@ -24,15 +24,13 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.atxca.order.Controller.OrderController.*;
+import static com.atxca.order.service.serviceImpl.OrderJpaServiceImpl.*;
 
 @Service
 public class PeriodTimeServiceImpl implements PeriodTimeService {
@@ -1059,5 +1057,297 @@ public class PeriodTimeServiceImpl implements PeriodTimeService {
         }
         return R.ok(msg);
     }
+
+    @Override
+    public R findOrderListHistory(String phone, String name, String date, String time, String changdi, String state, Integer page) {
+        List<Order> list = new ArrayList<>();
+        if("0".equals(changdi)){
+            //全部场馆
+            if("0".equals(state)){
+                //全部状态
+                if("".equals(date) && "".equals(time)){
+                    LogUtil.d("findOrderListHistory","全部场馆 全部状态");
+                    list = dao.findOrderListHistoryByAll((page-1)*20,20,phone,name);
+                }else{
+                    if(!"".equals(date) && !"".equals(time)){
+                        list = dao.findOrderListHistoryByAllAndDateTime(date,time,(page-1)*20,20,phone,name);
+                    }else if(!"".equals(date)){
+                        list = dao.findOrderListHistoryByAllAndDate(date,(page-1)*20,20,phone,name);
+                    }else if(!"".equals(time)){
+                        list = dao.findOrderListHistoryByAllAndTime(time,(page-1)*20,20,phone,name);
+                    }
+
+                }
+
+            }else{
+                //某个状态
+                if("".equals(date) && "".equals(time)){
+                    LogUtil.d("findOrderListHistory","全部场馆 某个状态");
+                    list = dao.findOrderListHistoryByAllAndState(new Integer(state),(page-1)*20,20,phone,name);
+                }else{
+                    if(!"".equals(date) && !"".equals(time)){
+                        list = dao.findOrderListHistoryByAllAndStateAndDateTime(state,date,time,(page-1)*20,20,phone,name);
+                    }else if(!"".equals(date)){
+                        list = dao.findOrderListHistoryByAllAndStateAndDate(state,date,(page-1)*20,20,phone,name);
+                    }else if(!"".equals(time)){
+                        list = dao.findOrderListHistoryByAllAndStateAndTime(state,time,(page-1)*20,20,phone,name);
+                    }
+
+                }
+
+                LogUtil.d("findOrderListHistory","全部场馆 某个状态");
+
+            }
+        }else{
+            if("0".equals(state)){
+                //全部状态
+                if("".equals(date) && "".equals(time)){
+                    LogUtil.d("findOrderListHistory","某个场馆 全部状态");
+                    list = dao.findOrderListHistoryByChangGuan(changdi,(page-1)*20,20,phone,name);
+                }else{
+                    if(!"".equals(date) && !"".equals(time)){
+                        list = dao.findOrderListHistoryByChangGuanAndDateTime(changdi,date,time,(page-1)*20,20,phone,name);
+                    }else if(!"".equals(date)){
+                        list = dao.findOrderListHistoryByChangGuanAndDate(changdi,date,(page-1)*20,20,phone,name);
+                    }else if(!"".equals(time)){
+                        list = dao.findOrderListHistoryByChangGuanAndTime(changdi,time,(page-1)*20,20,phone,name);
+                    }
+
+                }
+
+            }else{
+                LogUtil.d("findOrderListHistory","某个场馆 某个状态");
+
+                if("".equals(date) && "".equals(time)){
+                    list = dao.findOrderListHistoryByChangGuanAndState(new Integer(state),changdi,(page-1)*20,20,phone,name);
+                }else{
+                    if(!"".equals(date) && !"".equals(time)){
+                        list = dao.findOrderListHistoryByChangGuanAndStateAndDateTime(state,changdi,date,time,(page-1)*20,20,phone,name);
+                    }else if(!"".equals(date)){
+                        list = dao.findOrderListHistoryByChangGuanAndStateAndDate(state,changdi,date,(page-1)*20,20,phone,name);
+                    }else if(!"".equals(time)){
+                        list = dao.findOrderListHistoryByChangGuanAndStateAndTime(state,changdi,time,(page-1)*20,20,phone,name);
+                    }
+
+                }
+            }
+        }
+        LogUtil.i("list:"+list.size());
+        return R.ok(list);
+    }
+
+    @Override
+    public R findOrderListHistoryByPhone(String phone) {
+        List<Order> list = dao.findOrderListHistoryByPhone(phone);
+        return R.ok(list);
+    }
+
+    @Override
+    public R findOrderListHistoryByName(String name) {
+        List<Order> list = dao.findOrderListHistoryByName(name);
+        return R.ok(list);
+    }
+
+    @Override
+    public R deleteOrderHistoryById(Integer id) {
+        dao.deleteOrderHistoryById(id);
+        return R.ok();
+    }
+
+    @Override
+    public R exportOrderListHistory(String start_date, String end_date, String changdi, Integer state, HttpSession session) {
+        List<Order> list = new ArrayList<>();
+        int page = 1;
+        //全部场馆
+        if("0".equals(changdi)){
+            //开始日期和结束日期都为空，查询全部
+            if("".equals(start_date) && "".equals(end_date)){
+                if(state == 0){
+                    list = dao.findOrderListByAllAndStateSuccess(ORDER_TYPE_REACH,ORDER_TYPE_REACH_ALIPAY,(page-1)*20,2000000, "", "");
+                }else if(state == 7){
+                    list = dao.findOrderListByAllAndState(ORDER_TYPE_REACH,(page-1)*20,2000000, "", "");
+                }else if(state == 6){
+                    list = dao.findOrderListByAllAndState(ORDER_TYPE_REACH_ALIPAY,(page-1)*20,2000000, "", "");
+                }
+                // list = dao.findOrderListByAllAndState(ORDER_TYPE_REACH,0,2000000, "", "");
+            }else{
+                if(state == 0){
+                    list = dao.findOrderListByAllAndStateStartDateEndDateSuccess(ORDER_TYPE_REACH,ORDER_TYPE_REACH_ALIPAY,start_date,end_date,(page-1)*20,2000000);
+                }else if(state == 7){
+                    list = dao.findOrderListByAllAndStateStartDateEndDate(ORDER_TYPE_REACH,start_date,end_date,(page-1)*20,2000000);
+                }else if(state == 6){
+                    list = dao.findOrderListByAllAndStateStartDateEndDate(ORDER_TYPE_REACH_ALIPAY,start_date,end_date,(page-1)*20,2000000);
+                }
+
+                //list = dao.findOrderListByAllAndStateStartDateEndDate(ORDER_TYPE_REACH,start_date,end_date,0,2000000);
+            }
+
+        }else{
+
+            LogUtil.d("findOrderList","某个场馆 某个状态");
+
+            if("".equals(start_date) && "".equals(end_date)){
+                if(state == 0){
+                    list = dao.findOrderListByChangGuanAndStateSuccess(ORDER_TYPE_REACH,ORDER_TYPE_REACH_ALIPAY,changdi,(page-1)*20,2000000, "", "");
+                }else if(state == 7){
+                    list = dao.findOrderListByChangGuanAndState(ORDER_TYPE_REACH,changdi,(page-1)*20,2000000, "", "");
+                }else if(state == 6){
+                    list = dao.findOrderListByChangGuanAndState(ORDER_TYPE_REACH_ALIPAY,changdi,(page-1)*20,2000000, "", "");
+
+                }
+                //  list = dao.findOrderListByChangGuanAndState(ORDER_TYPE_REACH,changdi,0,2000000, "", "");
+            }else{
+                if(state == 0){
+                    list = dao.findOrderListByChangGuanAndStateStartDateEndDateSuccess(ORDER_TYPE_REACH,ORDER_TYPE_REACH_ALIPAY,changdi,start_date,end_date,(page-1)*20,2000000);
+                }else if(state == 7){
+                    list = dao.findOrderListByChangGuanAndStateStartDateEndDate(ORDER_TYPE_REACH,changdi,start_date,end_date,(page-1)*20,2000000);
+                }else if(state == 6){
+                    list = dao.findOrderListByChangGuanAndStateStartDateEndDate(ORDER_TYPE_REACH_ALIPAY,changdi,start_date,end_date,(page-1)*20,2000000);
+                }
+                // list = dao.findOrderListByChangGuanAndStateStartDateEndDate(ORDER_TYPE_REACH,changdi,start_date,end_date,0,2000000);
+            }
+
+        }
+
+        List<String> heads = new ArrayList<>();
+        heads.add("编号");
+        heads.add("场馆");
+        heads.add("片场");
+        heads.add("会员名称");
+        heads.add("会员电话");
+        heads.add("预约日期");
+        heads.add("预约时间段");
+        heads.add("价格");
+        heads.add("状态");
+        ByteArrayOutputStream baos = null;
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("报表");
+        ExcelUtil.headList(heads, sheet);
+
+        double sumprice = 0;
+        double sumprice_xianjin = 0;
+        double sumprice_alipay = 0;
+        int cell = 1;
+        for (Order order : list) {
+            HSSFRow headerRow = sheet.createRow(cell);// 行
+            int row = 0;
+            List cloums = new ArrayList<>();
+            cloums.add(order.getOid());//编号
+            if(null == order.getChangguan_name()){
+                cloums.add("-");//场馆名
+            }else{
+                cloums.add(order.getChangguan_name());//场馆名
+            }
+
+            if(null == order.getPianchang_name()){
+                cloums.add("-");//片场
+            }else{
+                cloums.add(order.getPianchang_name());//片场
+            }
+
+            cloums.add(order.getName());//名称
+            cloums.add(order.getPhone());//电话
+            cloums.add(order.getReserveTime());//日期
+            cloums.add(order.getBetTime());//时间段
+            cloums.add(order.getPrice() + "");//价格
+            if (order.getOpenid() == null) {
+                cloums.add("现场到场");
+            } else {
+                if(order.getType()==7){
+                    cloums.add("现金到场");
+                }else if(order.getType()==6){
+                    cloums.add("支付宝到场");
+                }
+
+            }
+            sumprice = sumprice + order.getPrice();
+            if(order.getType()==7){
+                sumprice_xianjin = sumprice_xianjin + order.getPrice();
+            }else if(order.getType()==6){
+                sumprice_alipay = sumprice_alipay + order.getPrice();
+            }
+
+            for (Object aaa : cloums) {
+                HSSFCell cell0 = headerRow.createCell(row); // 列
+                cell0.setCellValue(aaa.toString());
+                row += 1;
+            }
+            cell += 1;
+        }
+        cell = cell + 1;
+        HSSFRow headerRow = sheet.createRow(cell);// 行
+        HSSFCell cell0 = headerRow.createCell(0); // 列
+        cell0.setCellValue("总计");
+
+        HSSFCell cell02 = headerRow.createCell(1); // 列
+        cell02.setCellValue("订单数量:" + list.size());
+
+        HSSFCell cell3 = headerRow.createCell(2); // 列
+        cell3.setCellValue("总销售额" + sumprice);
+
+        HSSFCell cell4 = headerRow.createCell(3); // 列
+        cell4.setCellValue("现金销售额" + sumprice_xianjin);
+
+        HSSFCell cell5 = headerRow.createCell(4); // 列
+        cell5.setCellValue("支付宝销售额" + sumprice_alipay);
+
+        String fileName="健身报表"+start_date+"-"+(int)(System.currentTimeMillis()/1000)+".xls";
+        String path = session.getServletContext().getRealPath(Constants.FILE_PATH);
+        String downloadPath=Constants.SERVER_HOST+Constants.FILE_PATH+fileName;
+        File file =null;
+
+        // path = ResourceUtils.getURL("classpath:").getPath();
+
+        File FilePath = new File(path);
+        if(!FilePath.exists()){
+            FilePath.mkdirs();
+        }
+
+        // 生成文件
+        file = new File(path,fileName);
+        try {
+            file.createNewFile();
+            if(!file.exists()){
+                file.createNewFile();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        LOG.info("path:"+path+fileName);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            workbook.write(fos);//写出文件
+            fos.close();
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } finally {
+
+        }
+
+
+        // FastDFSClient fastDFSClient = new FastDFSClient();
+        // String url = fastDFSClient.uploadFile(baos.toByteArray(), "xls");
+
+        return R.ok(downloadPath);
+    }
+
+    @Override
+    public List<PeriodTimeClose> findPeriodTimeCloseListByCloseDateLessThan(Date date) {
+        List<PeriodTimeClose> list = dao.findPeriodTimeCloseListByCloseDateLessThan(date);
+        return list;
+    }
+
+    @Override
+    public void deletePeriodTimeCloseById(int id) {
+        dao.deletePeriodTimeCloseById(id);
+    }
+
 }
 

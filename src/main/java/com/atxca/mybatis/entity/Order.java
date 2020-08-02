@@ -1,11 +1,13 @@
 package com.atxca.mybatis.entity;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.persistence.Column;
 import java.sql.Timestamp;
 import java.util.Date;
 
+@Data
 public class Order {
     //@ApiModelProperty(value = "订单主键", name = "oid", example = "1")
     private int oid;
@@ -53,126 +55,5 @@ public class Order {
     private String pianchang_name;
 
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-
-    public String getReserveTime() {
-        return reserveTime;
-    }
-
-    public void setReserveTime(String reserveTime) {
-        this.reserveTime = reserveTime;
-    }
-
-    public String getBetTime() {
-        return betTime;
-    }
-
-    public void setBetTime(String betTime) {
-        this.betTime = betTime;
-    }
-
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getPid() {
-        return pid;
-    }
-
-    public void setPid(int pid) {
-        this.pid = pid;
-    }
-
-    public String getOpenid() {
-        return openid;
-    }
-
-    public void setOpenid(String openid) {
-        this.openid = openid;
-    }
-
-    public int getVid() {
-        return vid;
-    }
-
-    public void setVid(int vid) {
-        this.vid = vid;
-    }
-
-    public int getOid() {
-        return oid;
-    }
-
-    public void setOid(int oid) {
-        this.oid = oid;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getRemakes() {
-        return remakes;
-    }
-
-    public void setRemakes(String remakes) {
-        this.remakes = remakes;
-    }
-
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getChangguan_name() {
-        return changguan_name;
-    }
-
-    public void setChangguan_name(String changguan_name) {
-        this.changguan_name = changguan_name;
-    }
-
-    public String getPianchang_name() {
-        return pianchang_name;
-    }
-
-    public void setPianchang_name(String pianchang_name) {
-        this.pianchang_name = pianchang_name;
-    }
 }

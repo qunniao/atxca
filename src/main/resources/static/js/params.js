@@ -167,4 +167,12 @@ var api = {
     updateOrder:"/order/updateOrder",
     //createOrderForBack:"/order/createOrderForBack",
     createOrder:"/front/createOrder",
+
+    //OrderHistory
+    pagequeryOrderHistory: "/order/pagequeryOrderHistory",
+    findOrderListHistory:"/front/findOrderListHistory",
+    findOrderListHistoryByPhone:"/front/findOrderListHistoryByPhone",
+    findOrderListHistoryByName:"/front/findOrderListHistoryByName",
+    deleteOrderHistoryById:"/front/deleteOrderHistoryById",
+    exportOrderListHistory:"/front/exportOrderListHistory",
 };

@@ -66,12 +66,17 @@ $(function () {
         clearCss("idx4","page/updataUser")
     });
 
+    $("#idx5").click(function () {
+        clearCss("idx5","page/OrderHistory")
+    });
+
     function clearCss(name, paageName) {
         $("#idx0").removeClass("active");
         $("#idx1").removeClass("active");
         $("#idx2").removeClass("active");
         $("#idx3").removeClass("active");
         $("#idx4").removeClass("active");
+        $("#idx5").removeClass("active");
 
         $("#" + name).addClass("active");
         $("#PageContent").html(null);

@@ -398,4 +398,85 @@ public class InterfaceController {
         r.ToString();
         return r;
     }
+
+    /**
+     * 查询订单列表
+     */
+    @PostMapping(value = "/findOrderListHistory")
+    @ResponseBody
+    @Transactional(rollbackFor = TipException.class)
+    public R findOrderListHistory(String phone,String name,String date,String time,String changdi,String state,Integer page) {
+        LogUtil.d("findOrderListHistory","date: "+date+"time: "+time+"changdi: "+changdi+"state: "+state+"page: "+page);
+
+        R r = service.findOrderListHistory(phone,name,date,time,changdi,state,page);
+
+        //   logService.insertLog(LogActions.UP_INFO.getAction(), GsonUtils.toJsonString(temp), request.getRemoteAddr(), this.getUid(request));
+        r.ToString();
+        return r;
+    }
+
+    /**
+     * 根据手机号查询订单列表
+     */
+    @PostMapping(value = "/findOrderListHistoryByPhone")
+    @ResponseBody
+    @Transactional(rollbackFor = TipException.class)
+    public R findOrderListHistoryByPhone(String phone) {
+        LogUtil.d("findOrderListHistoryByPhone","phone: "+phone);
+
+        R r = service.findOrderListHistoryByPhone(phone);
+
+        //   logService.insertLog(LogActions.UP_INFO.getAction(), GsonUtils.toJsonString(temp), request.getRemoteAddr(), this.getUid(request));
+        r.ToString();
+        return r;
+    }
+
+    /**
+     * 根据联系人查询订单列表
+     */
+    @PostMapping(value = "/findOrderListHistoryByName")
+    @ResponseBody
+    @Transactional(rollbackFor = TipException.class)
+    public R findOrderListHistoryByName(String name) {
+        LogUtil.d("findOrderListHistoryByName","name: "+name);
+
+        R r = service.findOrderListHistoryByName(name);
+
+        //   logService.insertLog(LogActions.UP_INFO.getAction(), GsonUtils.toJsonString(temp), request.getRemoteAddr(), this.getUid(request));
+        r.ToString();
+        return r;
+    }
+
+    /**
+     * 根据id删除订单历史记录
+     */
+    @PostMapping(value = "/deleteOrderHistoryById")
+    @ResponseBody
+    @Transactional(rollbackFor = TipException.class)
+    public R deleteOrderHistoryById(Integer id) {
+        LogUtil.d("deleteOrderHistoryById","id: "+id);
+
+        R r = service.deleteOrderHistoryById(id);
+
+        //   logService.insertLog(LogActions.UP_INFO.getAction(), GsonUtils.toJsonString(temp), request.getRemoteAddr(), this.getUid(request));
+        r.ToString();
+        return r;
+    }
+
+    /**
+     * 导出订单历史记录报表
+     */
+    @PostMapping(value = "/exportOrderListHistory")
+    @ResponseBody
+    @Transactional(rollbackFor = TipException.class)
+    public R exportOrderListHistory(String start_date, String end_date, String search_changdi,Integer state,HttpSession session) {
+        LogUtil.d("exportOrderListHistory","start_date: "+start_date+"end_date: "+end_date);
+        R r = service.exportOrderListHistory(start_date,end_date,search_changdi,state,session);
+
+        //   logService.insertLog(LogActions.UP_INFO.getAction(), GsonUtils.toJsonString(temp), request.getRemoteAddr(), this.getUid(request));
+        r.ToString();
+        return r;
+    }
+
+
 }

@@ -10,6 +10,7 @@ import com.atxca.order.PO.OrderPO;
 import com.atxca.sportshall.PO.VenuePO;
 import com.atxca.sportshall.PO.Vhouse;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderDao2 extends BaseDao<PeriodTime> {
@@ -24,4 +25,16 @@ public interface OrderDao2 extends BaseDao<PeriodTime> {
     int findOrderCountByChangGuanIdAndDateAndStateMore(String date, int type,int id);
 
     int findPeriodTimeCloseByVidAndDate(String date, Integer id);
+
+    List<Order> findOrderListByReserveTimeLessThan(Date date);
+
+    void updateOrderType(int oid, int type);
+
+    Order findOrderHistoryByOrderId(String orderId);
+
+    void addOrderHistory(Order order);
+
+    void deleteOrderByOid(int oid);
+
+    List<Order> findOrderListByAll();
 }

@@ -268,7 +268,7 @@
 		AND
 			o.name LIKE CONCAT('%',#{name},'%')
 		ORDER BY
-			o.oid DESC
+			o.reserveTime
 		limit #{page},#{pageSize}
 	</select>
 
@@ -286,7 +286,7 @@
 		AND
 			o.betTime = #{betTime}
 		ORDER BY
-			o.oid DESC
+			o.reserveTime
 		limit #{page},#{pageSize}
 
 	</select>
@@ -303,7 +303,7 @@
 		AND
 			o.name LIKE CONCAT('%',#{name},'%')
 		ORDER BY
-			o.oid DESC
+			o.reserveTime
 		limit #{page},#{pageSize}
 	</select>
 
@@ -319,7 +319,7 @@
 		AND
 			o.name LIKE CONCAT('%',#{name},'%')
 		ORDER BY
-			o.oid DESC
+			o.reserveTime
 		limit #{page},#{pageSize}
 	</select>
 
@@ -327,7 +327,7 @@
 		SELECT
 			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
 		FROM
-			zc_order o
+			zc_order_history o
 		WHERE
 			o.type = #{orderTypeReach}
 		OR
@@ -337,7 +337,7 @@
 		AND
 			o.name LIKE CONCAT('%',#{name},'%')
 		ORDER BY
-			o.oid DESC
+			o.reserveTime DESC
 		limit #{page},#{pageSize}
 	</select>
 
@@ -345,7 +345,7 @@
 		SELECT
 			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
 		FROM
-			zc_order o
+			zc_order_history o
 		WHERE
 			o.type = #{type}
 		AND
@@ -353,7 +353,7 @@
 		AND
 			o.name LIKE CONCAT('%',#{name},'%')
 		ORDER BY
-			o.oid DESC
+			o.reserveTime DESC
 		limit #{page},#{pageSize}
 	</select>
 
@@ -490,7 +490,7 @@
 		SELECT
 			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
 		FROM
-			zc_order o
+			zc_order_history o
 		WHERE
 			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
@@ -499,7 +499,7 @@
 			o.phone LIKE CONCAT('%',#{phone},'%')
 		AND
 			o.name LIKE CONCAT('%',#{name},'%')
-		order by o.oid desc
+		order by o.reserveTime desc
 		limit #{page},#{pageSize}
 
 	</select>
@@ -508,7 +508,7 @@
 		SELECT
 			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
 		FROM
-			zc_order o
+			zc_order_history o
 		WHERE
 			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
@@ -517,7 +517,7 @@
 			o.phone LIKE CONCAT('%',#{phone},'%')
 		AND
 			o.name LIKE CONCAT('%',#{name},'%')
-		order by o.oid desc
+		order by o.reserveTime desc
 		limit #{page},#{pageSize}
 
 	</select>
@@ -629,13 +629,13 @@
 		SELECT
 			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
 		FROM
-			zc_order o
+			zc_order_history o
 		WHERE
 			DATE_FORMAT(o.reserveTime,'%Y%m%d') between #{start_date} and #{end_date}
 		AND
 			o.type >= #{orderTypeReachAlipay}
 
-		order by o.oid desc
+		order by o.reserveTime desc
 		limit #{page},#{pageSize}
 
 	</select>
@@ -644,12 +644,12 @@
 		SELECT
 			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
 		FROM
-			zc_order o
+			zc_order_history o
 		WHERE
 			o.type = #{type}
 		AND
 			o.reserveTime between #{start_date} and #{end_date}
-		order by o.oid desc
+		order by o.reserveTime desc
 		limit #{page},#{pageSize}
 
 	</select>
@@ -658,14 +658,14 @@
 		SELECT
 			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
 		FROM
-			zc_order o
+			zc_order_history o
 		WHERE
 			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.type in (#{orderTypeReachAlipay},#{orderTypeReach})
 		AND
 			o.reserveTime between #{start_date} and #{end_date}
-		order by o.oid desc
+		order by o.reserveTime desc
 		limit #{page},#{pageSize}
 
 	</select>
@@ -674,14 +674,14 @@
 		SELECT
 			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
 		FROM
-			zc_order o
+			zc_order_history o
 		WHERE
 			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.type = #{type}
 		AND
 			o.reserveTime between #{start_date} and #{end_date}
-		order by o.oid desc
+		order by o.reserveTime desc
 		limit #{page},#{pageSize}
 
 	</select>
@@ -726,4 +726,335 @@
         o.oid = #{oid}
     </update>
 
+	<select id="findOrderListHistoryByPhone" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.phone LIKE CONCAT('%',#{phone},'%')
+	</select>
+
+	<select id="findOrderListHistoryByName" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.name LIKE CONCAT('%',#{name},'%')
+	</select>
+
+	<select id="findOrderListHistoryByChangGuanAndStateAndTime" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.betTime = #{betTime}
+		AND
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
+		AND
+			o.type = #{type}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByChangGuanAndStateAndDate" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.reserveTime  LIKE #{reserveTime}
+		AND
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
+		AND
+			o.type = #{type}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByChangGuanAndStateAndDateTime" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.reserveTime  = #{reserveTime}
+		AND
+			o.betTime = #{betTime}
+		AND
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
+		AND
+			o.type = #{type}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByChangGuanAndState" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
+		AND
+			o.type = #{type}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByChangGuanAndTime" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.betTime = #{betTime}
+		AND
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByChangGuanAndDate" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.reserveTime  = #{reserveTime}
+		AND
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByChangGuanAndDateTime" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.reserveTime  = #{reserveTime}
+		AND
+			o.betTime = #{betTime}
+		AND
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByChangGuan" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByAllAndStateAndTime" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.betTime LIKE #{betTime}
+		AND
+			o.type = #{type}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByAllAndStateAndDate" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.reserveTime  LIKE #{reserveTime}
+		AND
+			o.type = #{type}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByAllAndStateAndDateTime" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.reserveTime  LIKE #{reserveTime}
+		AND
+			o.betTime LIKE #{betTime}
+		AND
+			o.type = #{type}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		order by o.reserveTime desc
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByAllAndState" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.type = #{type}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		ORDER BY
+			o.reserveTime DESC
+		limit #{page},#{pageSize}
+	</select>
+
+	<select id="findOrderListHistoryByAllAndTime" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.betTime = #{betTime}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		ORDER BY
+			o.reserveTime DESC
+		limit #{page},#{pageSize}
+	</select>
+
+	<select id="findOrderListHistoryByAllAndDate" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.reserveTime  = #{reserveTime}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		ORDER BY
+			o.reserveTime DESC
+		limit #{page},#{pageSize}
+	</select>
+
+	<select id="findOrderListHistoryByAllAndDateTime" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.reserveTime  = #{reserveTime}
+		AND
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		AND
+			o.betTime = #{betTime}
+		ORDER BY
+			o.reserveTime DESC
+		limit #{page},#{pageSize}
+
+	</select>
+
+	<select id="findOrderListHistoryByAll" resultType="com.atxca.mybatis.entity.Order">
+		SELECT
+			o.*,(select h.name from vhouse h where h.id in(select p.groups from venues p where p.vid = o.vid)) as changguan_name,(select p.vname from venues p where p.vid = o.vid) as pianchang_name
+		FROM
+			zc_order_history o
+		WHERE
+			o.phone LIKE CONCAT('%',#{phone},'%')
+		AND
+			o.name LIKE CONCAT('%',#{name},'%')
+		ORDER BY
+			o.reserveTime DESC
+		limit #{page},#{pageSize}
+	</select>
+
+	<delete id="deleteOrderHistoryById">
+		delete
+		FROM
+			zc_order_history
+        WHERE
+			oid = #{id}
+	</delete>
+
+	<select id="findPeriodTimeCloseListByCloseDateLessThan" resultType="com.atxca.mybatis.entity.PeriodTimeClose">
+		SELECT
+			o.*
+		FROM
+			periodtime_close o
+		WHERE
+			o.close_date &lt; #{date}
+	</select>
+
+	<delete id="deletePeriodTimeCloseById">
+		delete
+		FROM
+			periodtime_close
+        WHERE
+			id = #{id}
+	</delete>
 </mapper>

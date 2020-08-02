@@ -1,0 +1,505 @@
+<div id="app" xmlns:v-on="http://www.w3.org/1999/xhtml">
+    <div id="head"  >
+        <div  style="padding: 10px;">
+            <div>
+                <label class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;">联系人</label>
+                <input class="input_style" id="search_name" style="width: 120px">
+
+                <label class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;">联系电话</label>
+                <input class="input_style" id="search_phone" style="width: 120px">
+
+                <label class="cform-control ol-sm-3 control-label no-padding-right" for="search_date" style="margin-left: 20px;">日期</label>
+                <input type="text" class="input_style" value="" id="search_date" >
+                <!-- <button type="button" class="btn btn-primary btn-small" style="margin-left: 20px;" v-on:click="findList()">搜索</button>-->
+            </div>
+            <br/>
+            <div>
+
+
+
+                <label class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;" for="search_time">时间段</label>
+                <select class="input_style" id="search_time">
+                    <option value="">全部</option>
+                    <option value="9:00-10:00">9:00-10:00</option>
+                    <option value="9:00-11:00">9:00-11:00</option>
+                    <option value="10:00-11:00">10:00-11:00</option>
+                    <option value="11:00-12:00">11:00-12:00</option>
+                    <option value="12:00-13:00">12:00-13:00</option>
+                    <option value="12:00-14:00">12:00-14:00</option>
+                    <option value="13:00-14:00">13:00-14:00</option>
+                    <option value="14:00-15:00">14:00-15:00</option>
+                    <option value="14:00-16:00">14:00-16:00</option>
+                    <option value="15:00-16:00">15:00-16:00</option>
+                    <option value="16:00-17:00">16:00-17:00</option>
+                    <option value="16:00-18:00">16:00-18:00</option>
+                    <option value="17:00-18:00">17:00-18:00</option>
+                    <option value="18:00-19:00">18:00-19:00</option>
+                    <option value="18:00-20:00">18:00-20:00</option>
+                    <option value="19:00-20:00">19:00-20:00</option>
+                    <option value="20:00-21:00">20:00-21:00</option>
+                    <option value="20:00-22:00">20:00-22:00</option>
+                    <option value="21:00-22:00">21:00-22:00</option>
+                </select>
+
+                <span class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;">场馆</span>
+                <select id="search_changdi" name="search_changdi" class="input_style">
+                    <option value="0">全部</option>
+                </select>
+
+                <span class="cform-control ol-sm-3 control-label no-padding-right" style="margin-left: 20px;">订单状态</span>
+                <select id="search_state" name="search_state" class="input_style">
+                    <option value="0">全部</option>
+                    <option value="2">预约成功</option>
+                    <option value="7">现金到场</option>
+                    <option value="6">支付宝到场</option>
+                    <option value="5">预约未到</option>
+                    <option value="4">预约失败</option>
+                </select>
+
+                <button type="button" class="btn btn-primary" style="margin-left: 20px;" v-on:click="findList()">查询</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-12 maximum-margin">
+        <div class="card-body p-0">
+            <div class="table">
+                <div class="table-header-group" >
+                    <ul class="table-row">
+                        <li class="table-cell" style="width:150px;">片场名称</li>
+                        <li class="table-cell">场馆</li>
+                        <li class="table-cell" >联系人</li>
+                        <li class="table-cell">联系电话</li>
+                        <li class="table-cell" >预约日期</li>
+                        <li class="table-cell" >预约时间段</li>
+                        <li class="table-cell">价格</li>
+                        <li class="table-cell">订单状态</li>
+                        <li class="table-cell" style="width:200px;">操作</li>
+                    </ul>
+                </div>
+                <span class="table-row-group">
+                    <ul class="table-row" v-for="item in list">
+                        <li class="table-cell">{{item.pianchang_name}}</li>
+                        <li class="table-cell">{{item.changguan_name}}</li>
+                        <li class="table-cell">{{item.name}}</li>
+                        <li class="table-cell">{{item.phone}}</li>
+                        <li class="table-cell">{{item.reserveTime}}</li>
+                        <li class="table-cell">{{item.betTime}}</li>
+                        <li class="table-cell">{{item.price}}</li>
+                         <li class="table-cell">
+
+                            <span v-if="item.type==2">
+                                <span class="label label-warning radius">预约成功</span>
+                            </span>
+                            <span v-if="item.type==5">
+                                <span class="label label-info radius">预约未到</span>
+                            </span>
+                            <span v-if="item.type==7">
+                                <span class="label label-success radius">现金到场</span>
+                            </span>
+                             <span v-if="item.type==6">
+                                <span class="label label-success radius">支付宝到场</span>
+                            </span>
+                             <span v-if="item.type==4">
+                                <span class="label label-default radius">预约失败</span>
+                            </span>
+
+                         </li>
+
+                        <li class="table-cell">
+                              <button type="button" class="btn btn-default btn-sm "  v-on:click="deleteItem(item.oid)">删除</button>
+
+                        </li>
+                    </ul>
+                </span>
+            </div>
+
+        </div>
+
+        <div id="reservationPage2"></div>
+    </div>
+
+</div>
+
+
+<div id="viewPopUp" class="portlet box"></div>
+
+<!--导出确认模态窗口-->
+<div id="exportModal" class="modal" style="top: 50px">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" method="get" id="modaltestss">
+                <div class="modal-header">
+                    <strong>导出确认</strong>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label no-padding-right">场馆</label>
+                        <div class="col-sm-9">
+                            <span id="modal_changguan">全部</span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label no-padding-right">开始日期</label>
+                        <div class="col-sm-9">
+                            <span id="modal_start_date">全部</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label no-padding-right">结束日期</label>
+                        <div class="col-sm-9">
+                            <span id="modal_end_date">全部</span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" onclick="cancelModal()">取消</button>
+                    <button class="btn btn-primary" type="button" onclick="submitModal()">导出</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.getScript("js/page/OrderHistory.js");
+</script>
+
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            list: [],
+            date:"",
+            page:1,
+            list3:[]
+        },
+        // 在 `methods` 对象中定义方法
+        methods: {
+            findList: function () {
+                var search_phone = $("#search_phone").val();
+                var search_name = $("#search_name").val();
+                /*
+                if(""!=search_phone){
+                    //调用搜索联系电话方法
+                    app.findListByPhone(search_phone);
+                    return;
+                }
+
+                if(""!=search_name){
+                    //调用搜索联系人方法
+                    app.findListByName(search_name);
+                    return;
+                }
+*/
+
+                var search_date = $('#search_date').val();
+                console.log("搜索日期:" + search_date);
+
+                var search_time = $('#search_time').val();
+                console.log("搜索时间段:" + search_time);
+
+                var search_changdi = $('#search_changdi').val();
+                console.log("搜索场馆:" + search_changdi);
+
+                var search_state = $('#search_state').val();
+                console.log("搜索状态:" + search_state);
+
+                var opt = {
+                    "phone": search_phone,
+                    "name": search_name,
+                    "date": search_date,
+                    "time": search_time,
+                    "changdi": search_changdi,
+                    "state": search_state,
+                    "page":app.page
+                }
+                com.post(api.findOrderListHistory, opt, function (res) {
+                    app.list = res.payload;
+                    console.log(res);
+                    console.log("findList callback "+app.list);
+                }, function () {
+                }, false);
+
+
+
+            },
+            findListByPhone: function (data) {
+
+                var opt = {
+                    "phone":data
+                }
+                com.post(api.findOrderListHistoryByPhone, opt, function (res) {
+                    app.list = res.payload;
+                    console.log(res);
+
+                }, function () {
+                }, false);
+            },
+            findListByName: function (data) {
+
+                var opt = {
+                    "name":data
+                }
+                com.post(api.findOrderListHistoryByName, opt, function (res) {
+                    app.list = res.payload;
+                    console.log(res);
+
+                }, function () {
+                }, false);
+            },
+            findChangGuanList: function () {
+
+                var opt = {
+
+                }
+                com.post(api.findChangGuanList, opt, function (res) {
+                    var list = res.payload;
+                    console.log(res);
+                    //添加select 存放指标id
+                    var obj = document.getElementById('search_changdi'); //定位id
+
+                    //空置可预约
+                    var n=1;
+                    for(var i=0;i<list.length;i++){
+                        obj.options[n++] = new Option( list[i].name, list[i].id);
+                    }
+
+                }, function () {
+                }, false);
+            },
+            deleteItem: function (id) {
+                layer.confirm('确认要删除该订单吗？',function(index){
+                    var opt = {
+                        "id":id
+                    }
+                    com.post(api.deleteOrderHistoryById, opt, function (res) {
+                        console.log(res);
+                        app.findList();
+                    }, function () {
+                    }, false);
+                    layer.close(index);
+                    // window.location.href="${pageContext.request.contextPath}/store/updateStatus2.html?id="+id+"&status=0";
+                });
+            },
+            showExportModal: function () {
+                if("" != $("#start_date").val()){
+                    document.getElementById("modal_start_date").innerHTML=$("#start_date").val();
+                }
+                if("" != $("#end_date").val()){
+                    document.getElementById("modal_end_date").innerHTML=$("#end_date").val();
+                }
+
+                var search_changdi = $('#search_changdi option:selected').html();
+                document.getElementById("modal_changguan").innerHTML= search_changdi;
+
+                $("#exportModal").show();
+            },
+
+            printDaYin: function(item) {
+                console.log("打印");
+                console.log("oid "+item.oid);
+                document.getElementById("print_changdi_1").innerHTML="场地名称："+item.changguan_name+"-"+item.pianchang_name;
+                document.getElementById("print_changdi_2").innerHTML="场地名称："+item.changguan_name+"-"+item.pianchang_name;
+                document.getElementById("print_changdi_3").innerHTML="场地名称："+item.changguan_name+"-"+item.pianchang_name;
+
+                document.getElementById("print_date_1").innerHTML="预约日期："+item.reserveTime;
+                document.getElementById("print_date_2").innerHTML="预约日期："+item.reserveTime;
+                document.getElementById("print_date_3").innerHTML="预约日期："+item.reserveTime;
+
+                document.getElementById("print_time_1").innerHTML="预约时间："+item.betTime;
+                document.getElementById("print_time_2").innerHTML="预约时间："+item.betTime;
+                document.getElementById("print_time_3").innerHTML="预约时间："+item.betTime;
+
+                document.getElementById("print_price_1").innerHTML=item.price+" 元";
+                document.getElementById("print_price_2").innerHTML=item.price+" 元";
+                document.getElementById("print_price_3").innerHTML=item.price+" 元";
+
+                document.getElementById("print_all_price_1").innerHTML=item.price+" 元";
+                document.getElementById("print_all_price_2").innerHTML=item.price+" 元";
+                document.getElementById("print_all_price_3").innerHTML=item.price+" 元";
+
+                document.getElementById("print_name_1").innerHTML="会员名称："+item.name;
+                document.getElementById("print_name_2").innerHTML="会员名称："+item.name;
+                document.getElementById("print_name_3").innerHTML="会员名称："+item.name;
+
+                document.getElementById("print_phone_1").innerHTML="会员电话："+item.phone;
+                document.getElementById("print_phone_2").innerHTML="会员电话："+item.phone;
+                document.getElementById("print_phone_3").innerHTML="会员电话："+item.phone;
+
+                if(item.type==7){
+                    document.getElementById("print_state_1").innerHTML="预约状态：现金到场";
+                    document.getElementById("print_state_2").innerHTML="预约状态：现金到场";
+                    document.getElementById("print_state_3").innerHTML="预约状态：现金到场";
+                }
+                if(item.type==6){
+                    document.getElementById("print_state_1").innerHTML="预约状态：支付宝到场";
+                    document.getElementById("print_state_2").innerHTML="预约状态：支付宝到场";
+                    document.getElementById("print_state_3").innerHTML="预约状态：支付宝到场";
+                }
+
+                var myDate = new Date();
+                var year = myDate.getFullYear();
+                var month = myDate.getMonth()+1;
+                var day = myDate.getDate();
+                var hour = myDate.getHours();
+                var min = myDate.getMinutes();
+                // var seconds = myDate.getSeconds();
+
+                if(month < 10)month="0"+month;
+                if(day < 10)day="0"+day;
+                var date = year+"-"+month+"-"+day+" "+hour+":"+min;        //获取当前年份(4位)
+
+                console.log("打印日期:"+date);
+                document.getElementById("print_dayin_time_1").innerHTML="打印时间："+date;
+                document.getElementById("print_dayin_time_2").innerHTML="打印时间："+date;
+                document.getElementById("print_dayin_time_3").innerHTML="打印时间："+date;
+
+                //  $("#reservationModal").show();
+
+                $("#dayin").jqprint({operaSupport: false});
+                // viewToWord("房间：903\r\n栋号：6\r\n楼层：9\r\n户型\r\n时间：2011年9月16日");
+            }
+        }
+    })
+    app.findList();
+    app.findChangGuanList();
+
+
+    $('#vhouseid').change(function () {
+        var id = $('#vhouseid').val();
+        console.log("vhouseid:"+id);
+        $('#venusesid').empty();
+        $('#pbettime').empty();
+
+        //获取片场列表
+        var opt = {
+            "id": id
+        }
+        var list = null;
+        com.post(api.findPianChangList2, opt, function (res) {
+            list = res.payload;
+
+            //添加select 存放指标id
+            var obj = document.getElementById('venusesid'); //定位id
+
+            var n=0;
+            for(var i=0;i<list.length;i++){
+                obj.options[n++] = new Option( list[i].vname, list[i].vid);
+            }
+
+        }, function () {
+        }, false);
+
+        $("#pbettime").bindData(app.list3, "pid", "betTime", false);
+
+
+
+        app.list3=null;
+        var opt = {
+            "id": id
+        }
+        com.post(api.findPeriodTimeListById, opt, function (res) {
+            app.list3 = res.payload;
+        }, function () {
+        }, false);
+        console.log("list3:"+app.list3);
+        var d=document.getElementById('pbettime');
+        d.innerHTML="";
+        for(var i=0;i<app.list3.length;i++){
+            //创建一个节点
+            var a=document.createElement('input');
+            a.type="checkbox";
+            a.name="type"+app.list3[i].pid;
+            a.id="type"+app.list3[i].pid;
+            a.value=app.list3[i].pid;
+            //a.style="margin-right:20px";
+            d.appendChild(a);
+
+            var b=document.createElement('span');
+            b.innerHTML=app.list3[i].betTime;
+            b.setAttribute("class","type_span");
+            b.style="margin-right:20px";
+            d.appendChild(b);
+
+
+
+        }
+
+    });
+
+    $('#pbettime').click(function () {
+        checkMoney();
+    });
+
+
+
+    function checkMoney() {
+        console.log("checkMoney");
+
+        var value = $("#usertimes").val().trim();
+        console.log("日期："+value);
+        if (value == "") {
+            return;
+        }
+        var day = new Date(value).getDay();
+        console.log("day："+day);
+
+        var money=0;
+        for(var i=0;i<app.list3.length;i++){
+            var check = document.getElementById("type"+app.list3[i].pid).checked;
+            console.log("check:"+check.checked);//false
+            if(!check)continue;
+
+            var text="";
+            switch (day) {
+
+                case 1:
+                    text = "星期一";
+                case 2:
+                    text = "星期二";
+                case 3:
+                    text = "星期三";
+                case 4:
+                    text = "星期四";
+                case 5:
+                    text = "星期五";
+                    money += app.list3[i].price;
+                    console.log("星期几:" + text);
+                    break;
+                case 6:
+                    text = "星期六";
+                case 0:
+                    text = "星期日";
+                    money += app.list3[i].weekPrice;
+                    console.log("星期几2:" + text);
+                    break;
+            }
+        }
+        console.log("money:"+money);
+        $("#money").text(money+"元");
+    }
+
+    $("#search_date").fdatepicker({
+        format: 'yyyy-mm-dd'
+    });
+
+
+
+
+</script>
+
+

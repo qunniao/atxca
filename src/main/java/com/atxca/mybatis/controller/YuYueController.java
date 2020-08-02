@@ -129,7 +129,8 @@ public class YuYueController {
     @ResponseBody
     @Transactional(rollbackFor = TipException.class)
     public R createOrder(String name, String phone, String pids,String reserveTime,Integer vid,String openid,HttpSession session) {
-        LogUtil.d("createOrderForBack","pids:"+pids+" vid:"+vid+" openid:"+openid);
+        LogUtil.d("createOrderForBack","pids:"+pids+" vid:"+vid+" openid:"+openid+" name:"+name+" phone:"+phone+" reserveTime:"+reserveTime);
+
         R r = service.createOrder(name,phone.trim(),pids,reserveTime,vid,openid);
 
         //   logService.insertLog(LogActions.UP_INFO.getAction(), GsonUtils.toJsonString(temp), request.getRemoteAddr(), this.getUid(request));

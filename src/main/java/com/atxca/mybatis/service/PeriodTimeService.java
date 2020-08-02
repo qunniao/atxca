@@ -2,8 +2,11 @@ package com.atxca.mybatis.service;
 
 
 import com.atxca.Util.R;
+import com.atxca.mybatis.entity.PeriodTimeClose;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
 
 public interface PeriodTimeService {
 
@@ -56,4 +59,18 @@ public interface PeriodTimeService {
     R refreshOrder();
 
     R findOrderListBySuccess2(String start_date, String end_date, String changdi, Integer state, Integer page);
+
+    R findOrderListHistoryByName(String name);
+
+    R findOrderListHistoryByPhone(String phone);
+
+    R findOrderListHistory(String phone, String name, String date, String time, String changdi, String state, Integer page);
+
+    R deleteOrderHistoryById(Integer id);
+
+    R exportOrderListHistory(String start_date, String end_date, String search_changdi, Integer state, HttpSession session);
+
+    List<PeriodTimeClose> findPeriodTimeCloseListByCloseDateLessThan(Date date);
+
+    void deletePeriodTimeCloseById(int id);
 }
