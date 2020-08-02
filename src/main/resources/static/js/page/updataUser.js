@@ -44,8 +44,8 @@ $(function () {
             if (res.code == 200) {
                 $("#upuser").hide();
                 alert("修改成功重新登录!");
-                // window.location.href = "/login.html"
-                window.location.href = "/atxca/index.html"
+                 window.location.href = "/login.html"
+                //window.location.href = "/atxca/index.html"
             } else {
                 alert("修改失败!!")
             }
@@ -54,7 +54,7 @@ $(function () {
     });
 
     $("#logout").click(function(){
-        window.location.href = "/atxca/index.html"
+        window.location.href = "/index.html"
     });
 
     //-----------------------------------------------

@@ -1,25 +1,22 @@
 package com.atxca.Util;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+
+
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 
 public class Base64Util {
     public static String Base64UtilEncoder(String str) {
-        BASE64Encoder encoder = new BASE64Encoder();
-        String encode = encoder.encode(str.getBytes());
-        return encode;
+        //BASE64Encoder encoder = new BASE64Encoder();
+        //String encode = encoder.encode(str.getBytes());
+        return Base64.encodeBase64String(str.getBytes());
     }
 
     public static String Base64UtilDecoder(String str) {
-        BASE64Decoder decoder = new BASE64Decoder();
+        //BASE64Decoder decoder = new BASE64Decoder();
         String decode = null;
-        try {
-            decode = new String(decoder.decodeBuffer(str));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            decode = new String(Base64.decodeBase64(str));
 
         return decode;
     }

@@ -2,7 +2,7 @@
 <head>
     <title>商家管理</title>
 
-    <link href="https://back.zhanchengwlkj.com/atxca/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://admin.zjtyj.cn/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         ul{margin:0;padding:0;list-style:none;}
@@ -452,23 +452,23 @@
     </div>
 </div>
 
-<script src="https://back.zhanchengwlkj.com/atxca/js/params.js"></script>
-<script src="https://back.zhanchengwlkj.com/atxca/assets/js/jquery-1.4.4.min.js"></script>
-<script src="https://back.zhanchengwlkj.com/atxca/assets/jquery/jquery.min.js"></script>
+<script src="https://admin.zjtyj.cn/js/params.js"></script>
+<script src="https://admin.zjtyj.cn/assets/js/jquery-1.4.4.min.js"></script>
+<script src="https://admin.zjtyj.cn/assets/jquery/jquery.min.js"></script>
 
 
 
 
-<script src="https://back.zhanchengwlkj.com/atxca/assets/layer/layer.js"></script>
-<script src="https://back.zhanchengwlkj.com/atxca/js/bootstrap.min.js"></script>
+<script src="https://admin.zjtyj.cn/assets/layer/layer.js"></script>
+<script src="https://admin.zjtyj.cn/js/bootstrap.min.js"></script>
 
 
-<script src="https://back.zhanchengwlkj.com/atxca/system/js/core.js"></script>
-<script src="https://back.zhanchengwlkj.com/atxca/js/vue.js"></script>
+<script src="https://admin.zjtyj.cn/system/js/core.js"></script>
+<script src="https://admin.zjtyj.cn/js/vue.js"></script>
 
 <!--日期-->
-<script src="https://back.zhanchengwlkj.com/atxca/assets/js/foundation-datepicker.js"></script>
-<script src="https://back.zhanchengwlkj.com/atxca/assets/js/foundation-datepicker.zh-CN.js"></script>
+<script src="https://admin.zjtyj.cn/assets/js/foundation-datepicker.js"></script>
+<script src="https://admin.zjtyj.cn/assets/js/foundation-datepicker.zh-CN.js"></script>
 
 <!---->
 <script src="https://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
@@ -680,7 +680,7 @@
 
                 layer.confirm('确认要删除吗？',function(index){
                     $.ajax({
-                        url: "https://back.zhanchengwlkj.com/atxca/front/deletePianChangByMore",
+                        url: "https://admin.zjtyj.cn/front/deletePianChangByMore",
                         type: "POST",
                         dataType: "json",
                         data: {
@@ -713,7 +713,7 @@
 
                 layer.confirm('确认要删除吗？',function(index){
                     $.ajax({
-                        url: "https://back.zhanchengwlkj.com/atxca/front/deletePeriodTimeByMore",
+                        url: "https://admin.zjtyj.cn/front/deletePeriodTimeByMore",
                         type: "POST",
                         dataType: "json",
                         data: {
@@ -965,7 +965,7 @@
 
         console.log("时间段id："+pid);
         $.ajax({
-            url: "https://back.zhanchengwlkj.com/atxca/front/updatePeriodTime",
+            url: "https://admin.zjtyj.cn/front/updatePeriodTime",
             type: "POST",
             dataType: "json",
             data: {
@@ -1062,9 +1062,10 @@
             return;
         }
         console.log("片场新名称："+name+" num:"+num);
-
+        //console.log("addPianChangByMore："+api.addPianChangByMore);
         $.ajax({
-            url: "https://back.zhanchengwlkj.com/atxca/front/addPianChangByMore",
+            url: "https://admin.zjtyj.cn/front/addPianChangByMore",
+            //url: "http://localhost:8080/front/addPianChangByMore",
             type: "POST",
             dataType: "json",
             data: {
@@ -1078,7 +1079,8 @@
                 $("#ModalByAddPianChang").hide();
             },
             error: function() {
-                alert("修改失败");
+                alert("修改失败 ");
+                //console.log("修改失败 addPianChangByMore："+this.url);
             }
         });
     }
@@ -1114,7 +1116,7 @@
         console.log("submitModalByAddPeriodTime content："+content);
 
         $.ajax({
-            url: "https://back.zhanchengwlkj.com/atxca/front/addPeriodTimeByMore",
+            url: "https://admin.zjtyj.cn/front/addPeriodTimeByMore",
             type: "POST",
             dataType: "json",
             data: {

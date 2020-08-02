@@ -14,9 +14,11 @@ jQuery(function () {
                 optAsync = false;
             }
             var ss = window.location.host;
+            /*
             if (ss != "localhost:8080") {
                 url = "/atxca" + url;
             }
+             */
             $.ajax({
                 url: url,
                 data: opts,

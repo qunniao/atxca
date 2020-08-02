@@ -7,44 +7,44 @@
     <!-- 执行获取账号和数据源匹配登录 -->
     <select id="findPeriodTimeListById" resultType="com.atxca.mybatis.entity.PeriodTime">
 		SELECT
-			*
+			p.*
 		FROM
-			periodtime
+			periodtime p
 		WHERE
-			vhouse_id = #{id}
+			p.vhouse_id = #{id}
 		ORDER BY
-		    sort DESC
+		    p.sort DESC
 	</select>
 
 	<select id="findVhouseListByAll" resultType="com.atxca.sportshall.PO.Vhouse">
 		SELECT
-			*
+			v.*
 		FROM
-			vhouse
+			vhouse v
 		ORDER BY
-		    type
+		    v.type
 	</select>
 
 	<select id="findVhouseListByType" resultType="com.atxca.sportshall.PO.Vhouse">
 		SELECT
-			*
+			v.*
 		FROM
-			vhouse
+			vhouse v
 		WHERE
-			type = #{type}
+			v.type = #{type}
 		ORDER BY
-		    type
+		    v.type
 	</select>
 
 	<select id="findVenueListByVhouseId" resultType="com.atxca.sportshall.PO.VenuePO">
 		SELECT
-			*
+			v.*
 		FROM
-			venues
+			venues v
 		WHERE
-			groups = #{id}
+			v.groups = #{id}
 		ORDER BY
-		    sort DESC
+		    v.sort DESC
 	</select>
 
 	<select id="findOrderListByDateTime" resultType="com.atxca.order.PO.OrderPO">
@@ -85,15 +85,15 @@
 
 	<select id="findPeriodTimeListByVidAndTime" resultType="com.atxca.mybatis.entity.PeriodTime">
 		SELECT
-			*
+			p.*
 		FROM
-			periodtime
+			periodtime p
 		WHERE
-			vhouse_id = #{vhouse_id}
+			p.vhouse_id = #{vhouse_id}
 		AND
-			betTime = #{betTime}
+			p.betTime = #{betTime}
 		ORDER BY
-		    sort DESC
+		    p.sort DESC
 	</select>
 
 	<insert id="addPeriodTimeClose" parameterType="com.atxca.mybatis.entity.PeriodTimeClose">
@@ -115,16 +115,16 @@
 
 	<update id="updateOrderState" parameterType="com.atxca.order.PO.OrderPO">
 		UPDATE
-		zc_order
+		zc_order o
 		<set>
 
 			<if test= "type != null and type != ''">
-				type=#{type}
+				o.type=#{type}
 			</if>
 
 		</set>
 		WHERE
-		oid = #{oid}
+		o.oid = #{oid}
 	</update>
 
 
@@ -160,16 +160,16 @@
 		FROM
 			vhouse
 		WHERE
-			id in (select groups from venues where vid = #{id})
+			id in (select v.groups from venues v where v.vid = #{id})
 	</select>
 
 	<select id="findChangGuanTypeList" resultType="com.atxca.data.PO.TypePO">
 		SELECT
-			*
+			t.*
 		FROM
-			typepo
+			typepo t
 		ORDER BY
-			sort DESC
+			t.sort DESC
 	</select>
 
 	<delete id="deleteChangGuanById">
@@ -209,24 +209,24 @@
 
 	<update id="updatePeriodTime" parameterType="com.atxca.mybatis.entity.PeriodTime">
 		UPDATE
-		periodtime
+		periodtime p
 		<set>
 
 			<if test= "betTime != null and betTime != ''">
-				betTime=#{betTime},
+				p.betTime=#{betTime},
 			</if>
 			<if test= "sort != null and sort != ''">
-				sort=#{sort},
+				p.sort=#{sort},
 			</if>
 			<if test= "price != null and price != ''">
-				price=#{price},
+				p.price=#{price},
 			</if>
 			<if test= "weekPrice != null and weekPrice != ''">
-				weekPrice=#{weekPrice}
+				p.weekPrice=#{weekPrice}
 			</if>
 		</set>
 		WHERE
-		pid = #{pid}
+		p.pid = #{pid}
 	</update>
 
 
@@ -419,7 +419,7 @@
 		FROM
 			zc_order o
 		WHERE
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.phone LIKE CONCAT('%',#{phone},'%')
 		AND
@@ -439,7 +439,7 @@
 		AND
 			o.betTime = #{betTime}
 		AND
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.phone LIKE CONCAT('%',#{phone},'%')
 		AND
@@ -457,7 +457,7 @@
 		WHERE
 			o.reserveTime  = #{reserveTime}
 		AND
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.phone LIKE CONCAT('%',#{phone},'%')
 		AND
@@ -475,7 +475,7 @@
 		WHERE
 			o.betTime = #{betTime}
 		AND
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.phone LIKE CONCAT('%',#{phone},'%')
 		AND
@@ -492,11 +492,9 @@
 		FROM
 			zc_order o
 		WHERE
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
-			o.type = #{orderTypeReach}
-		OR
-			o.type = #{orderTypeReachAlipay}
+			o.type in (#{orderTypeReachAlipay},#{orderTypeReach})
 		AND
 			o.phone LIKE CONCAT('%',#{phone},'%')
 		AND
@@ -512,7 +510,7 @@
 		FROM
 			zc_order o
 		WHERE
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.type = #{type}
 		AND
@@ -534,7 +532,7 @@
 		AND
 			o.betTime = #{betTime}
 		AND
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.type = #{type}
 		AND
@@ -554,7 +552,7 @@
 		WHERE
 			o.reserveTime  LIKE #{reserveTime}
 		AND
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.type = #{type}
 		AND
@@ -574,7 +572,7 @@
 		WHERE
 			o.betTime = #{betTime}
 		AND
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.type = #{type}
 		AND
@@ -599,7 +597,7 @@
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="vid">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		INSERT  INTO venues (groups,vName)
+		INSERT  INTO venues (`groups`,vName)
 		VALUES (#{groups},#{vName})
 	</insert>
 
@@ -662,11 +660,9 @@
 		FROM
 			zc_order o
 		WHERE
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
-			o.type = #{orderTypeReach}
-		OR
-			o.type = #{orderTypeReachAlipay}
+			o.type in (#{orderTypeReachAlipay},#{orderTypeReach})
 		AND
 			o.reserveTime between #{start_date} and #{end_date}
 		order by o.oid desc
@@ -680,7 +676,7 @@
 		FROM
 			zc_order o
 		WHERE
-			o.vid in (select vid from venues where groups = #{changdi})
+			o.vid in (select v.vid from venues v where v.groups = #{changdi})
 		AND
 			o.type = #{type}
 		AND
@@ -718,16 +714,16 @@
 
     <update id="updateOrderState2" parameterType="com.atxca.mybatis.entity.Order">
         UPDATE
-        zc_order
+        zc_order o
         <set>
 
             <if test= "type != null and type != ''">
-                type=#{type}
+                o.type=#{type}
             </if>
 
         </set>
         WHERE
-        oid = #{oid}
+        o.oid = #{oid}
     </update>
 
 </mapper>

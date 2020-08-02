@@ -1,7 +1,7 @@
 var stype = getQueryVariable("flages");
 if (stype != "yes123") {
     // window.location.href = "/login.html"
-    window.location.href = "/atxca/login.html"
+    window.location.href = "/login.html"
 }
 
 function getQueryVariable(variable) {

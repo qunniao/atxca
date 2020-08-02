@@ -27,13 +27,13 @@
 
 	<select id="findVenueListByVhouseId2" resultType="com.atxca.mybatis.entity.PianChangPO">
 		SELECT
-			*
+			v.*
 		FROM
-			venues
+			venues v
 		WHERE
-			groups = #{id}
+			v.groups = #{id}
 		ORDER BY
-		    sort DESC
+		    v.sort DESC
 	</select>
 
 	<select id="findOrderCountByChangGuanIdAndDateAndStateMore" resultType="Integer">
@@ -42,7 +42,7 @@
 		FROM
 			zc_order o
 		WHERE
-			o.vid in (select vid from venues where groups = #{id})
+			o.vid in (select v.vid from venues v where v.groups = #{id})
 		AND
 			o.reserveTime = #{date}
 		AND
@@ -55,11 +55,11 @@
 		SELECT
 			count(*)
 		FROM
-			periodtime_close
+			periodtime_close c
 		WHERE
-			venues_id in (select vid from venues where groups = #{id})
+			c.venues_id in (select v.vid from venues v where v.groups = #{id})
 		AND
-		   close_date = #{date}
+		   c.close_date = #{date}
 	</select>
 
 </mapper>

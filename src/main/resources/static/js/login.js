@@ -13,11 +13,14 @@ $(function ($) {
             if (res.code == 200) {
                 var ss = window.location.host;
                 console.log(ss)
+                /*
                 if (ss == "localhost:8080") {
                     window.location.href = "/index.html?flages=yes123&userName=" + res.data.userName + "&userPassWord=" + res.data.userPassWord
                 } else {
-                    window.location.href = "/atxca/index.html?flages=yes123&userName=" + res.data.userName + "&userPassWord=" + res.data.userPassWord
-                }
+
+                 */
+                    window.location.href = "/index.html?flages=yes123&userName=" + res.data.userName + "&userPassWord=" + res.data.userPassWord
+               // }
 
 
             }
