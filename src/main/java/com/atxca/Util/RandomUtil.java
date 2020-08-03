@@ -1,7 +1,12 @@
 package com.atxca.Util;
 
+import com.atxca.aop.LogicRuntimeException;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author 王志鹏
@@ -63,5 +68,21 @@ public class RandomUtil {
     public static void main(String[] args) {
         System.out.println(getShortUuid());
         System.out.println(getRandom_Six());
+    }
+
+    /**
+     * 校验手机号码格式
+     * @param phone
+     */
+    public  void checkPhoneFormat(String phone) {
+        if (StringUtils.isBlank(phone)) {
+            throw new LogicRuntimeException("手机号码不能为空");
+        }
+        String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[0-9])|(16[6]))\\d{8}$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(phone);
+        if (!m.matches()) {
+            throw new LogicRuntimeException("手机号码格式不正确");
+        }
     }
 }

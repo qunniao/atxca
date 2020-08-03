@@ -2,9 +2,13 @@ package com.atxca.mybatis.controller;
 
 import com.atxca.Util.LogUtil;
 import com.atxca.Util.R;
+import com.atxca.Util.RandomUtil;
+import com.atxca.aop.LogicRuntimeException;
 import com.atxca.mybatis.exception.TipException;
 import com.atxca.mybatis.service.OrderService;
 import com.atxca.mybatis.service.PeriodTimeService;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 
+@Slf4j
 @RestController
 @RequestMapping("/yuyue")
 public class YuYueController {
@@ -129,8 +134,12 @@ public class YuYueController {
     @ResponseBody
     @Transactional(rollbackFor = TipException.class)
     public R createOrder(String name, String phone, String pids,String reserveTime,Integer vid,String openid,HttpSession session) {
-        LogUtil.d("createOrderForBack","pids:"+pids+" vid:"+vid+" openid:"+openid+" name:"+name+" phone:"+phone+" reserveTime:"+reserveTime);
-
+        log.error("createOrderForBack","pids:"+pids+" vid:"+vid+" openid:"+openid+" name:"+name+" phone:"+phone+" reserveTime:"+reserveTime);
+        RandomUtil randomUtil = new RandomUtil();
+        randomUtil.checkPhoneFormat(phone.trim());
+        if(null == reserveTime || "".equals(reserveTime)){
+            throw new LogicRuntimeException("预约时间不能为空");
+        }
         R r = service.createOrder(name,phone.trim(),pids,reserveTime,vid,openid);
 
         //   logService.insertLog(LogActions.UP_INFO.getAction(), GsonUtils.toJsonString(temp), request.getRemoteAddr(), this.getUid(request));

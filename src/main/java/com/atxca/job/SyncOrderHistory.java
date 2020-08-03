@@ -53,19 +53,22 @@ public class SyncOrderHistory {
         for (Order order:list) {
             log.error("开始=================");
             //过期订单如果状态为预约成功2，则改成预约未到场5
+            /*
             if(order.getType()==2){
                 order.setType(5);
                 orderService.updateOrderType(order.getOid(),order.getType());
                 log.error("订单id:{},原状态：2,现状态：{}",order.getOid(),order.getType());
             }
+
+             */
             Order orderHistory = orderService.findOrderHistoryByOrderId(order.getOrderId());
             if(orderHistory!=null){
                 log.error("已存在历史订单，订单id:{}",order.getOrderId());
             }else{
                 orderService.addOrderHistory(order);
             }
-            orderService.deleteOrderByOid(order.getOid());
-            log.error("已删除订单:{}",order.getOid());
+            //orderService.deleteOrderByOid(order.getOid());
+            //log.error("已删除订单:{}",order.getOid());
         }
 
         List<Order> list2 = orderService.findOrderListByAll();
@@ -83,10 +86,13 @@ public class SyncOrderHistory {
             }else{
                 orderService.addOrderHistory(order);
             }
+            /*
             if(order.getType()==5 || order.getType()==4){
                 orderService.deleteOrderByOid(order.getOid());
                 log.error("已删除订单:{}",order.getOrderId());
             }
+
+             */
 
         }
 
@@ -95,7 +101,7 @@ public class SyncOrderHistory {
     /**
      * 每24小时执行一次，删除过期内部关闭的场馆设置
      */
-    @Scheduled(initialDelay=1000*60,fixedDelay = 1000*60*60*24)
+    //@Scheduled(initialDelay=1000*60,fixedDelay = 1000*60*60*24)
     public void deletePeriodTimeClose(){
         log.error("删除内部关闭开始===========");
         Date date = new Date();

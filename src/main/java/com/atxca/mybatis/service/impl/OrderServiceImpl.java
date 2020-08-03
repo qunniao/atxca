@@ -471,7 +471,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public synchronized R createOrder(String name, String phone, String pids, String reserveTime, Integer vid, String openid) {
+    public R createOrder(String name, String phone, String pids, String reserveTime, Integer vid, String openid) {
         String[] p = pids.split(",");
         Order order;
 
@@ -517,7 +517,7 @@ public class OrderServiceImpl implements OrderService {
 
         for(int i=0;i<p.length;i++) {
             if ("".equals(p[i])) continue;
-            PeriodTime periodTime = timeDao.findPeriodTimeByPid(new Integer(p[i]));
+            PeriodTime periodTime = timeDao.findPeriodTimeByPid(Integer.parseInt(p[i]));
             List<PeriodTimeClose> periodTimeClose = timeDao.findPeriodTimeCloseListByVidAndDateTime(vid,reserveTime,periodTime.getBetTime());
             if(periodTimeClose!=null && periodTimeClose.size()>0){
                 PeriodTimeClose periodTimeClose1 = periodTimeClose.get(0);
